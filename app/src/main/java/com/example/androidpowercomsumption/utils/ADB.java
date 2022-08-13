@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption;
+package com.example.androidpowercomsumption.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
