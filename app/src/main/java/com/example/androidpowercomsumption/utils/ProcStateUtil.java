@@ -88,6 +88,7 @@ public class ProcStateUtil {
 //            for(String str:procStateInfo){
 //                Log.d(TAG, str);
 //            }
+            procState.setId(Integer.parseInt(procStateInfo[0]));
             procState.setComm(procStateInfo[1].replace("(", "").replace(")", ""));
             procState.setStat(procStateInfo[2]);
             procState.setUtime(Long.parseLong(procStateInfo[13]));

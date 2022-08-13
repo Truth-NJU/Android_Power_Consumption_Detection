@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.utils;
 
 public class ProcState {
+    public int id;
     public String comm = "";
     public String stat = "";
 
@@ -12,6 +13,14 @@ public class ProcState {
     public long cstime = -1;
 
     public int numThreads = 0; //进程下线程的数量
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getNumThreads() {
         return numThreads;
