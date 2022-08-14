@@ -42,6 +42,11 @@ public class ThreadConsumptionDiff {
 
         public int tid;
 
+        // 监控的时间段
+        public String startTime;
+
+        public String endTime;
+
         @Override
         public String toString() {
             return "ThreadDiff{" +
@@ -49,6 +54,8 @@ public class ThreadConsumptionDiff {
                     ", comm='" + comm + '\'' +
                     ", state='" + state + '\'' +
                     ", tid=" + tid +
+                    ", startTime=" + startTime +
+                    ", endTime=" + endTime +
                     '}';
         }
     }

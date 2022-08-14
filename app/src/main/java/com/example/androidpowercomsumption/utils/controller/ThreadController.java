@@ -5,7 +5,9 @@ import com.example.androidpowercomsumption.utils.ProcState;
 import com.example.androidpowercomsumption.utils.ProcStateUtil;
 import com.example.androidpowercomsumption.utils.diff.ThreadConsumptionDiff;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ public class ThreadController {
         preProcState = procStateUtil.getAllThreadInfo();
     }
 
+
     public void finish() {
         // 对结束时间的系统状态做快照
         this.endTime = System.currentTimeMillis();
@@ -38,5 +41,13 @@ public class ThreadController {
         curProcState = procStateUtil.getAllThreadInfo();
         ThreadConsumptionDiff threadConsumptionDiff = new ThreadConsumptionDiff();
         this.threadDiffList = threadConsumptionDiff.calculateDiff(this.preProcState, this.curProcState);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
+
+        for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
+            Date date = new Date(this.startTime);
+            threadDiff.startTime = format.format(date);
+            date = new Date(this.endTime);
+            threadDiff.endTime = format.format(date);
+        }
     }
 }
