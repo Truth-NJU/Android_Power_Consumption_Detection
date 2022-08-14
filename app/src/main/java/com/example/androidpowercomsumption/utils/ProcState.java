@@ -80,10 +80,16 @@ public class ProcState {
         return cutime;
     }
 
+
+    public void setCutime(long cutime) {
+        this.cutime = cutime;
+    }
+
     @Override
     public String toString() {
         return "ProcState{" +
-                "comm='" + comm + '\'' +
+                "id=" + id +
+                ", comm='" + comm + '\'' +
                 ", stat='" + stat + '\'' +
                 ", utime=" + utime +
                 ", stime=" + stime +
@@ -92,9 +98,4 @@ public class ProcState {
                 ", numThreads=" + numThreads +
                 '}';
     }
-
-    public void setCutime(long cutime) {
-        this.cutime = cutime;
-    }
-
 }

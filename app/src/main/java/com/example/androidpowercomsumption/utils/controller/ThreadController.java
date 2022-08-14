@@ -15,13 +15,14 @@ public class ThreadController {
 
     public long startTime = SystemClock.uptimeMillis(); // 监控开始时间
 
+    public long endTime;
     public List<ProcState> preProcState;
     public List<ProcState> curProcState;
 
     public List<ThreadConsumptionDiff.ThreadDiff> threadDiffList;
 
     public void start() {
-        startTime = SystemClock.uptimeMillis();
+        startTime = System.currentTimeMillis();
         // 对开始时间的系统状态做快照
 
         // 线程
@@ -31,6 +32,7 @@ public class ThreadController {
 
     public void finish() {
         // 对结束时间的系统状态做快照
+        this.endTime = System.currentTimeMillis();
         // 线程
         ProcStateUtil procStateUtil = new ProcStateUtil();
         curProcState = procStateUtil.getAllThreadInfo();

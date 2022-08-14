@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.utils;
 
 import android.os.Process;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,6 +83,11 @@ public class ProcStateUtil {
         try {
             RandomAccessFile reader = new RandomAccessFile(path, "r");
             String procStr = reader.readLine();
+            // 找出线程的名称，需要特殊处理
+            int beginIndex=procStr.indexOf("(");
+            int lastIndex=procStr.indexOf(")");
+            String comm=procStr.substring(beginIndex+1,lastIndex);
+            procStr=procStr.substring(0,beginIndex)+procStr.substring(lastIndex+2);
 //            Log.d(TAG, procStr);
             String[] procStateInfo = procStr.split(" ");
 //            Log.d(TAG, String.valueOf(procStateInfo.length));
@@ -89,14 +95,14 @@ public class ProcStateUtil {
 //                Log.d(TAG, str);
 //            }
             procState.setId(Integer.parseInt(procStateInfo[0]));
-            procState.setComm(procStateInfo[1].replace("(", "").replace(")", ""));
-            procState.setStat(procStateInfo[2]);
-            procState.setUtime(Long.parseLong(procStateInfo[13]));
-            procState.setStime(Long.parseLong(procStateInfo[14]));
-            procState.setCutime(Long.parseLong(procStateInfo[15]));
-            procState.setCstime(Long.parseLong(procStateInfo[16]));
-            procState.setNumThreads(Integer.parseInt(procStateInfo[19]));
-//            Log.d(TAG, procState.toString());
+            procState.setComm(comm);
+            procState.setStat(procStateInfo[1]);
+            procState.setUtime(Long.parseLong(procStateInfo[12]));
+            procState.setStime(Long.parseLong(procStateInfo[13]));
+            procState.setCutime(Long.parseLong(procStateInfo[14]));
+            procState.setCstime(Long.parseLong(procStateInfo[15]));
+            procState.setNumThreads(Integer.parseInt(procStateInfo[18]));
+            Log.d(TAG, procState.toString());
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
