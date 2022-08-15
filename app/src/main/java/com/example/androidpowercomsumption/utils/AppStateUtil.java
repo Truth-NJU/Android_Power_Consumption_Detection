@@ -60,13 +60,4 @@ public class AppStateUtil {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         return pm.isInteractive();
     }
-
-    /**
-     * 获取一段时间内app的状态
-     *
-     * @param time
-     */
-    public void getAppState(long time) {
-
-    }
 }

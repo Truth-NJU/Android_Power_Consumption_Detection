@@ -1,12 +1,11 @@
-package com.example.androidpowercomsumption.utils.controller;
+package com.example.androidpowercomsumption.controller;
 
 import android.os.SystemClock;
 import com.example.androidpowercomsumption.utils.ProcState;
 import com.example.androidpowercomsumption.utils.ProcStateUtil;
-import com.example.androidpowercomsumption.utils.diff.ThreadConsumptionDiff;
+import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

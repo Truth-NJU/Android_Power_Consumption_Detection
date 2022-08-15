@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption.utils.diff;
+package com.example.androidpowercomsumption.diff;
 
 import com.example.androidpowercomsumption.utils.ProcState;
 
