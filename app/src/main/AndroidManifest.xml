@@ -8,6 +8,7 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:name="com.example.androidpowercomsumption.utils.AppStateApplication"
             android:theme="@style/Theme.AndroidPowerComsumption">
         <activity
                 android:name=".MainActivity"
