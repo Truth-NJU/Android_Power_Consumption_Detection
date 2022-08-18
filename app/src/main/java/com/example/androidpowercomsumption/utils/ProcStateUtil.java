@@ -56,7 +56,7 @@ import java.util.List;
  * sigignore: 被忽略的信号, 十进制, 此处等于36088
  */
 public class ProcStateUtil {
-    private static final String TAG = "ProcStateUtil";
+    private static final String TAG = "AppStateApplication";
 
     /**
      * 根据pid/tid得到对应文件中的信息

@@ -6,28 +6,119 @@ import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
 import com.example.androidpowercomsumption.controller.AppStateController;
+import com.example.androidpowercomsumption.controller.DeviceStateController;
+import com.example.androidpowercomsumption.controller.ThreadController;
+import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
+
+import java.util.List;
 
 
 public class AppStateApplication extends Application {
     private static final String TAG = "AppStateApplication";
 
-    /**
-     * onCreate是一个回调接口，android系统会在应用程序启动的时候，在任何应用程序组件（activity、服务、
-     * 广播接收器和内容提供者）被创建之前调用这个接口。
-     * 需要注意的是，这个方法的执行效率会直接影响到启动Activity等的性能，因此此方法应尽快完成。
-     * 最后在该方法中，一定要记得调用super.onCreate()，否则应用程序将会报错。
-     */
+    private final DeviceStateListener listener = new DeviceStateListener(this);
+
+    private final DeviceStateController deviceStateController = new DeviceStateController();
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         //注册自己的Activity的生命周期回调接口。
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks(this.deviceStateController));
+        /**
+         * 注册监听
+         */
+        listener.register(new DeviceStateListener.ScreenStateListener() {
+
+            boolean isFirst = true; // 第一次启动
+
+            @Override
+            public void onScreenOn() {
+                Log.d(TAG + "Device", "屏幕点亮");
+                if (isFirst) {
+                    isFirst = false;
+                    deviceStateController.start();
+                    deviceStateController.status = true; // 亮屏状态
+                    deviceStateController.curStatusStartTime = deviceStateController.startTime;
+                } else {
+                    if (!deviceStateController.status) { // 息屏进入亮屏
+                        deviceStateController.status = true;
+                        deviceStateController.curStatusEndTime = System.currentTimeMillis(); // 息屏状态的结束时间
+                        deviceStateController.screenOffTime += (deviceStateController.curStatusEndTime - deviceStateController.curStatusStartTime);
+                        deviceStateController.curStatusStartTime = System.currentTimeMillis(); // 息屏进入亮屏，亮屏状态的开始时间
+                    }
+                }
+            }
+
+            @Override
+            public void onScreenOff() {
+                Log.d(TAG + "Device", "屏幕熄灭");
+                if (deviceStateController.status) { // 亮屏进入息屏
+                    deviceStateController.status = false;
+                    deviceStateController.curStatusEndTime = System.currentTimeMillis(); // 亮屏状态的结束时间
+                    deviceStateController.screenOnTime += (deviceStateController.curStatusEndTime - deviceStateController.curStatusStartTime);
+                    deviceStateController.curStatusStartTime = System.currentTimeMillis(); // 亮屏进入息屏，息屏状态的开始时间
+
+                }
+            }
+
+            @Override
+            public void onUserPresent() {
+
+            }
+
+            boolean isFirstCharge = true; // 第一次充电
+
+            boolean isCharge = false;
+
+            @Override
+            public void onPowerConnected() {
+                Log.d(TAG + "Device", "开始充电");
+                if (isFirstCharge) { // 第一次充电
+                    isFirstCharge = false;
+                    isCharge = true;
+                    deviceStateController.curStatusStartTimeCharge = System.currentTimeMillis();
+                } else {
+                    if (!isCharge) { // 从不充电变为充电状态
+                        isCharge = true;
+                        deviceStateController.curStatusEndTimeCharge = System.currentTimeMillis(); // 不充电状态的结束时间
+                        deviceStateController.noChargeTime += (deviceStateController.curStatusEndTimeCharge - deviceStateController.curStatusStartTimeCharge);
+                        deviceStateController.curStatusStartTimeCharge = System.currentTimeMillis();// 充电状态的开始时间
+
+                    }
+                }
+            }
+
+            @Override
+            public void onPowerDisconnected() {
+                Log.d(TAG + "Device", "停止充电");
+                if (isCharge) { // 从充电状态变为不充电状态
+                    isCharge = false;
+                    deviceStateController.curStatusEndTimeCharge = System.currentTimeMillis(); // 充电状态的结束时间
+                    deviceStateController.chargeTime += (deviceStateController.curStatusEndTimeCharge - deviceStateController.curStatusStartTimeCharge);
+                    deviceStateController.curStatusStartTimeCharge = System.currentTimeMillis(); // 不充电状态的开始时间
+
+                }
+
+            }
+        });
+
     }
+
 
     //声明一个监听Activity们生命周期的接口
     static class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
 
         private final AppStateController appStateController = new AppStateController();
+
+        private ThreadController threadController = new ThreadController();
+
+        private final DeviceStateController deviceStateController;
+
+        public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
+            this.deviceStateController = deviceStateController;
+        }
 
         /**
          * application下的每个Activity声明周期改变时，都会触发以下的函数。
@@ -42,6 +133,8 @@ public class AppStateApplication extends Application {
 
         @Override
         public void onActivityStarted(Activity activity) {
+            threadController = new ThreadController();
+            threadController.start();
             Log.d(TAG, "APP进入前台");
             if (!appStateController.status) { // 后台进入前台
                 appStateController.status = true;
@@ -70,6 +163,13 @@ public class AppStateApplication extends Application {
                 appStateController.curStatusStartTime = System.currentTimeMillis(); // 前台进入后台，后台状态的开始时间
             }
 
+            //
+            threadController.finish();
+            List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
+            for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
+                Log.d(TAG, threadDiff.toString());
+            }
+
 
         }
 
@@ -80,6 +180,7 @@ public class AppStateApplication extends Application {
         @Override
         public void onActivityDestroyed(Activity activity) {
             appStateController.finish();
+            deviceStateController.finish();
         }
     }
 

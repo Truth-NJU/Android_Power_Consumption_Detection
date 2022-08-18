@@ -31,16 +31,16 @@ public class AppStateController {
 
     public void finish() {
         this.endTime = System.currentTimeMillis();
-        this.foregroundRatio = foregroundTime * 1.0 / (this.endTime - this.startTime);
-        this.backgroundRatio = backgroundTime * 1.0 / (this.endTime - this.startTime);
+        this.foregroundRatio = foregroundTime * 1.0 / (this.foregroundTime + this.backgroundTime);
+        this.backgroundRatio = backgroundTime * 1.0 / (this.foregroundTime + this.backgroundTime);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
         Log.d(TAG, "前台运行时间:" + this.foregroundTime);
         Log.d(TAG, "后台运行时间:" + this.backgroundTime);
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
-        Log.d(TAG, String.valueOf(this.foregroundRatio));
-        Log.d(TAG, String.valueOf(this.backgroundRatio));
+        Log.d(TAG, "前台运行时间占比:" + String.valueOf(this.foregroundRatio));
+        Log.d(TAG, "后台运行时间占比:" + String.valueOf(this.backgroundRatio));
 
 
     }

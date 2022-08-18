@@ -17,6 +17,8 @@ public class ThreadController {
     public long startTime = SystemClock.uptimeMillis(); // 监控开始时间
 
     public long endTime;
+
+
     public List<ProcState> preProcState;
     public List<ProcState> curProcState;
 
