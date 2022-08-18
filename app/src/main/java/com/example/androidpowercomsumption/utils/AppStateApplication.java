@@ -33,6 +33,7 @@ public class AppStateApplication extends Application {
 
             boolean isFirst = true; // 第一次启动
 
+            // 设备状态监控
             @Override
             public void onScreenOn() {
                 Log.d(TAG + "Device", "屏幕点亮");
@@ -133,8 +134,11 @@ public class AppStateApplication extends Application {
 
         @Override
         public void onActivityStarted(Activity activity) {
+            // 对于线程功耗监控，每次app状态切换都要进行监控
             threadController = new ThreadController();
             threadController.start();
+
+            // 前后台运行监控
             Log.d(TAG, "APP进入前台");
             if (!appStateController.status) { // 后台进入前台
                 appStateController.status = true;
@@ -163,7 +167,6 @@ public class AppStateApplication extends Application {
                 appStateController.curStatusStartTime = System.currentTimeMillis(); // 前台进入后台，后台状态的开始时间
             }
 
-            //
             threadController.finish();
             List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
             for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
