@@ -85,14 +85,8 @@ public class SystemServiceHooker {
                         new InvocationHandler() {
                             @Override
                             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                if (callback != null) {
-                                    callback.onServiceMethodInvoke(method, args);
-                                    Object result = callback.onServiceMethodIntercept(originManagerService, method, args);
-                                    if (result != null) {
-                                        return result;
-                                    }
-                                }
-                                return method.invoke(originManagerService, args);
+                                // todo
+                                return null;
                             }
                         }
                 );

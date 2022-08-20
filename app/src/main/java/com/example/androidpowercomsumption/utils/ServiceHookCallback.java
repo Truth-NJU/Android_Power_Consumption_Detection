@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public interface ServiceHookCallback {
-    void onServiceMethodInvoke(Method method, Object[] args);
+    void serviceMethodInvoke(Method method, Object[] args);
 
     @Nullable
-    Object onServiceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable;
+    Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable;
 }
