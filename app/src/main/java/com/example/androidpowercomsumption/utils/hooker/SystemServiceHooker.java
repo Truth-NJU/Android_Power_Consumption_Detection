@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption.utils;
+package com.example.androidpowercomsumption.utils.hooker;
 
 import android.os.IBinder;
 import android.os.IInterface;
@@ -85,8 +85,14 @@ public class SystemServiceHooker {
                         new InvocationHandler() {
                             @Override
                             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                // todo
-                                return null;
+                                if (callback != null) {
+                                    callback.serviceMethodInvoke(method, args);
+                                    Object result = callback.serviceMethodIntercept(originManagerService, method, args);
+                                    if (result != null) {
+                                        return result;
+                                    }
+                                }
+                                return method.invoke(originManagerService, args);
                             }
                         }
                 );
