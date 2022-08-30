@@ -55,6 +55,10 @@ public class SystemServiceHooker {
         return false;
     }
 
+    public boolean doUnHook() {
+        return true;
+    }
+
 
     static final class BinderProxyHandler implements InvocationHandler {
 

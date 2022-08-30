@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.androidpowercomsumption.controller.AppStateController;
 import com.example.androidpowercomsumption.controller.DeviceStateController;
 import com.example.androidpowercomsumption.controller.ThreadController;
+import com.example.androidpowercomsumption.controller.WifiServiceController;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 
 import java.util.List;
@@ -117,6 +118,8 @@ public class AppStateApplication extends Application {
 
         private final DeviceStateController deviceStateController;
 
+        private final WifiServiceController wifiServiceController=new WifiServiceController();
+
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
             this.deviceStateController = deviceStateController;
         }
@@ -130,6 +133,7 @@ public class AppStateApplication extends Application {
             appStateController.start();
             appStateController.status = true; // 前台状态
             appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
+            wifiServiceController.start();
         }
 
         @Override
@@ -184,6 +188,7 @@ public class AppStateApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
             appStateController.finish();
             deviceStateController.finish();
+            wifiServiceController.finish();
         }
     }
 
