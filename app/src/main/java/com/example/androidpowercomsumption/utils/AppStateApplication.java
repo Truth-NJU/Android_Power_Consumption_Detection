@@ -5,11 +5,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
-import com.example.androidpowercomsumption.controller.AppStateController;
-import com.example.androidpowercomsumption.controller.DeviceStateController;
-import com.example.androidpowercomsumption.controller.ThreadController;
-import com.example.androidpowercomsumption.controller.WifiServiceController;
+import com.example.androidpowercomsumption.controller.*;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
+import com.example.androidpowercomsumption.utils.hooker.GPSServiceHooker;
 
 import java.util.List;
 
@@ -120,6 +118,8 @@ public class AppStateApplication extends Application {
 
         private final WifiServiceController wifiServiceController=new WifiServiceController();
 
+        private final GPSServiceController gpsServiceController=new GPSServiceController();
+
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
             this.deviceStateController = deviceStateController;
         }
@@ -133,7 +133,10 @@ public class AppStateApplication extends Application {
             appStateController.start();
             appStateController.status = true; // 前台状态
             appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
+
+            // service
             wifiServiceController.start();
+            gpsServiceController.start();
         }
 
         @Override
@@ -188,7 +191,10 @@ public class AppStateApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
             appStateController.finish();
             deviceStateController.finish();
+
+            // service
             wifiServiceController.finish();
+            gpsServiceController.finish();
         }
     }
 

@@ -33,7 +33,7 @@ public class SystemServiceHooker {
         try {
             Class<?> serviceManager = Class.forName("android.os.ServiceManager");
             Method getService = serviceManager.getDeclaredMethod("getService", String.class);
-            // hook服务的IBinder对象
+            // hook服务的原始IBinder对象
             this.baseServiceBinder = (IBinder) getService.invoke(null, serviceName);
 
             this.proxyServiceBinder = (IBinder) Proxy.newProxyInstance(
@@ -41,6 +41,8 @@ public class SystemServiceHooker {
                     new Class<?>[]{IBinder.class},
                     new BinderProxyHandler(this.serviceClass, this.hookCallback, this.baseServiceBinder));
 
+
+            // 获取缓存池
             Class<?> serviceManagerCls = Class.forName("android.os.ServiceManager");
             Field cacheField = serviceManagerCls.getDeclaredField("sCache");
             cacheField.setAccessible(true);
@@ -56,7 +58,25 @@ public class SystemServiceHooker {
     }
 
     public boolean doUnHook() {
-        return true;
+        try {
+            Class<?> serviceManager = Class.forName("android.os.ServiceManager");
+
+            // 判断当前IBinder是否为嗲里嗲气IBinder
+            Method method = serviceManager.getDeclaredMethod("getService", String.class);
+            IBinder currentBinder = (IBinder) method.invoke(null, serviceName);
+            if (currentBinder != proxyServiceBinder) return false;
+
+
+
+            Field cacheField = serviceManager.getDeclaredField("sCache");
+            cacheField.setAccessible(true);
+            Map<String, IBinder> cache = (Map) cacheField.get(null);
+            cache.put(serviceName, baseServiceBinder);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -105,4 +125,148 @@ public class SystemServiceHooker {
         }
 
     }
+    /*private static final String TAG = "Matrix.battery.SystemServiceBinderHooker";
+
+    public interface HookCallback {
+        void onServiceMethodInvoke(Method method, Object[] args);
+
+        @Nullable
+        Object onServiceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable;
+    }
+
+    private final String mServiceName;
+    private final String mServiceClass;
+    private final ServiceHookCallback mHookCallback;
+
+    @Nullable
+    private IBinder mOriginServiceBinder;
+    @Nullable
+    private IBinder mDelegateServiceBinder;
+
+    public SystemServiceHooker(final String serviceName, final String serviceClass, final ServiceHookCallback hookCallback) {
+        mServiceName = serviceName;
+        mServiceClass = serviceClass;
+        mHookCallback = hookCallback;
+    }
+
+    @SuppressWarnings({"PrivateApi", "unchecked", "rawtypes"})
+    public boolean doHook() {
+        try {
+            BinderProxyHandler binderProxyHandler = new BinderProxyHandler(mServiceName, mServiceClass, mHookCallback);
+            IBinder delegateBinder = binderProxyHandler.createProxyBinder();
+
+            Class<?> serviceManagerCls = Class.forName("android.os.ServiceManager");
+            Field cacheField = serviceManagerCls.getDeclaredField("sCache");
+            cacheField.setAccessible(true);
+            Map<String, IBinder> cache = (Map) cacheField.get(null);
+            cache.put(mServiceName, delegateBinder);
+
+            mDelegateServiceBinder = delegateBinder;
+            mOriginServiceBinder = binderProxyHandler.getOriginBinder();
+            return true;
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @SuppressWarnings({"PrivateApi", "unchecked", "rawtypes"})
+    public boolean doUnHook() {
+        if (mOriginServiceBinder == null) {
+            return false;
+        }
+        if (mDelegateServiceBinder == null) {
+            return false;
+        }
+
+        try {
+            IBinder currentBinder = BinderProxyHandler.getCurrentBinder(mServiceName);
+            if (mDelegateServiceBinder != currentBinder) {
+                return false;
+            }
+
+            Class<?> serviceManagerCls = Class.forName("android.os.ServiceManager");
+            Field cacheField = serviceManagerCls.getDeclaredField("sCache");
+            cacheField.setAccessible(true);
+            Map<String, IBinder> cache = (Map) cacheField.get(null);
+            cache.put(mServiceName, mOriginServiceBinder);
+            return true;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    static final class BinderProxyHandler implements InvocationHandler {
+        private final IBinder mOriginBinder;
+        private final Object mServiceManagerProxy;
+
+        BinderProxyHandler(String serviceName, String serviceClass, ServiceHookCallback callback) throws Exception {
+            mOriginBinder = getCurrentBinder(serviceName);
+            mServiceManagerProxy = createServiceManagerProxy(serviceClass, mOriginBinder, callback);
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if ("queryLocalInterface".equals(method.getName())) {
+                return mServiceManagerProxy;
+            }
+            return method.invoke(mOriginBinder, args);
+        }
+
+        public IBinder getOriginBinder() {
+            return mOriginBinder;
+        }
+
+        @SuppressWarnings({"PrivateApi"})
+        public IBinder createProxyBinder() throws Exception {
+            Class<?> serviceManagerCls = Class.forName("android.os.ServiceManager");
+            ClassLoader classLoader = serviceManagerCls.getClassLoader();
+            if (classLoader == null) {
+                throw new IllegalStateException("Can not get ClassLoader of " + serviceManagerCls.getName());
+            }
+            return (IBinder) Proxy.newProxyInstance(
+                    classLoader,
+                    new Class<?>[]{IBinder.class},
+                    this
+            );
+        }
+
+        @SuppressWarnings({"PrivateApi"})
+        static IBinder getCurrentBinder(String serviceName) throws Exception {
+            Class<?> serviceManagerCls = Class.forName("android.os.ServiceManager");
+            Method getService = serviceManagerCls.getDeclaredMethod("getService", String.class);
+            return (IBinder) getService.invoke(null, serviceName);
+        }
+
+        @SuppressWarnings({"PrivateApi"})
+        private static Object createServiceManagerProxy(String serviceClassName, IBinder originBinder, final ServiceHookCallback callback) throws Exception {
+            Class<?> serviceManagerCls = Class.forName(serviceClassName);
+            Class<?> serviceManagerStubCls = Class.forName(serviceClassName + "$Stub");
+            ClassLoader classLoader = serviceManagerStubCls.getClassLoader();
+            if (classLoader == null) {
+                throw new IllegalStateException("get service manager ClassLoader fail!");
+            }
+            Method asInterfaceMethod = serviceManagerStubCls.getDeclaredMethod("asInterface", IBinder.class);
+            final Object originManagerService = asInterfaceMethod.invoke(null, originBinder);
+            return Proxy.newProxyInstance(classLoader,
+                    new Class[]{IBinder.class, IInterface.class, serviceManagerCls},
+                    new InvocationHandler() {
+                        @Override
+                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                            if (callback != null) {
+                                callback.serviceMethodInvoke(method, args);
+                                Object result = callback.serviceMethodIntercept(originManagerService, method, args);
+                                if (result != null) {
+                                    return result;
+                                }
+                            }
+                            return method.invoke(originManagerService, args);
+                        }
+                    }
+            );
+        }
+    }*/
 }

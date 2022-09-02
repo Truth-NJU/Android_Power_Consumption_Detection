@@ -17,11 +17,13 @@ public class WifiServiceController {
         listener = new WifiServiceHooker.ServiceListener() {
             @Override
             public void startScan() {
+                Log.d(TAG, "startScan: " + scanTime);
                 scanTime++;
             }
 
             @Override
             public void getScanResults() {
+                Log.d(TAG, "getScanResults: " + queryTime);
                 queryTime++;
             }
         };

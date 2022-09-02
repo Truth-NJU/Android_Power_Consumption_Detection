@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.utils.hooker;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Method;
@@ -9,19 +10,23 @@ import java.util.List;
 
 public class WifiServiceHooker {
 
+   private static final String TAG = "WifiService";
+
     public interface ServiceListener {
         void startScan();
+
         void getScanResults();
     }
-    private static ServiceHookCallback serviceHookCallback=new ServiceHookCallback() {
+
+    private static ServiceHookCallback serviceHookCallback = new ServiceHookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
-            if(method.getName().equals("startScan")){
-                for(ServiceListener listener:listeners){
+            if (method.getName().equals("startScan")) {
+                for (ServiceListener listener : listeners) {
                     listener.startScan();
                 }
-            }else if(method.getName().equals("getScanResults")){
-                for(ServiceListener listener:listeners){
+            } else if (method.getName().equals("getScanResults")) {
+                for (ServiceListener listener : listeners) {
                     listener.getScanResults();
                 }
             }
@@ -35,20 +40,22 @@ public class WifiServiceHooker {
         }
     };
 
-    public static SystemServiceHooker systemServiceHooker=new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", serviceHookCallback);
+    public static SystemServiceHooker systemServiceHooker = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", serviceHookCallback);
 
     private static List<ServiceListener> listeners = new ArrayList<>();
 
 
-    public static void addListener(ServiceListener serviceListener){
-        if(listeners.contains(serviceListener)) return;
+    public static void addListener(ServiceListener serviceListener) {
+        if (listeners.contains(serviceListener)) return;
         listeners.add(serviceListener);
-        systemServiceHooker.doHook();
+        boolean isSuccess = systemServiceHooker.doHook();
+        Log.d(TAG, "addListener: " + isSuccess);
     }
 
-    // todo
-    public static void removeListener(ServiceListener serviceListener){
+    public static void removeListener(ServiceListener serviceListener) {
+        if(!listeners.contains(serviceListener)) return;
         listeners.remove(serviceListener);
-        systemServiceHooker.doUnHook();
+        boolean isSuccess = systemServiceHooker.doUnHook();
+        Log.d(TAG, "removeListener: " + isSuccess);
     }
 }
