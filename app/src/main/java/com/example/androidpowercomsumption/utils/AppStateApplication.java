@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
-import com.example.androidpowercomsumption.controller.*;
+import com.example.androidpowercomsumption.controller.AppStateController;
+import com.example.androidpowercomsumption.controller.DeviceStateController;
+import com.example.androidpowercomsumption.controller.GPSServiceController;
+import com.example.androidpowercomsumption.controller.ThreadController;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
-import com.example.androidpowercomsumption.utils.hooker.GPSServiceHooker;
 
 import java.util.List;
 
@@ -19,14 +21,13 @@ public class AppStateApplication extends Application {
 
     private final DeviceStateController deviceStateController = new DeviceStateController();
 
-
     @Override
     public void onCreate() {
         super.onCreate();
         //注册自己的Activity的生命周期回调接口。
         registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks(this.deviceStateController));
         /**
-         * 注册监听
+         * 注册监听app状态和设备状态
          */
         listener.register(new DeviceStateListener.ScreenStateListener() {
 
@@ -103,7 +104,6 @@ public class AppStateApplication extends Application {
 
             }
         });
-
     }
 
 
@@ -116,9 +116,10 @@ public class AppStateApplication extends Application {
 
         private final DeviceStateController deviceStateController;
 
-        private final WifiServiceController wifiServiceController=new WifiServiceController();
+//        private final WifiServiceController wifiServiceController=new WifiServiceController();
 
         private final GPSServiceController gpsServiceController=new GPSServiceController();
+
 
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
             this.deviceStateController = deviceStateController;
@@ -129,14 +130,17 @@ public class AppStateApplication extends Application {
          */
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
             // 只会在启动的时候触发一次
             appStateController.start();
             appStateController.status = true; // 前台状态
             appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
 
             // service
-            wifiServiceController.start();
+//            wifiServiceController.start();
             gpsServiceController.start();
+
+
         }
 
         @Override
@@ -193,8 +197,9 @@ public class AppStateApplication extends Application {
             deviceStateController.finish();
 
             // service
-            wifiServiceController.finish();
+//            wifiServiceController.finish();
             gpsServiceController.finish();
+
         }
     }
 

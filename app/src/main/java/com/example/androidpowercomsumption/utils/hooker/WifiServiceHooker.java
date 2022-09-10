@@ -5,57 +5,47 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-public class WifiServiceHooker {
+public final class WifiServiceHooker {
+    private static final String TAG = "WifiService";
 
-   private static final String TAG = "WifiService";
+    private static int scanTime = 0;
 
-    public interface ServiceListener {
-        void startScan();
+    private static int getScanResultTime = 0;
 
-        void getScanResults();
-    }
-
-    private static ServiceHookCallback serviceHookCallback = new ServiceHookCallback() {
+    public static SystemServiceHooker.HookCallback sHookCallback = new SystemServiceHooker.HookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
-            if (method.getName().equals("startScan")) {
-                for (ServiceListener listener : listeners) {
-                    listener.startScan();
-                }
-            } else if (method.getName().equals("getScanResults")) {
-                for (ServiceListener listener : listeners) {
-                    listener.getScanResults();
-                }
+            if ("startScan".equals(method.getName())) {
+                scanTime++;
+                Log.d(TAG, "scan++");
+            } else if ("getScanResults".equals(method.getName())) {
+                getScanResultTime++;
             }
         }
 
         @Nullable
-        @org.jetbrains.annotations.Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
+        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) {
             return null;
         }
     };
 
-    public static SystemServiceHooker systemServiceHooker = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", serviceHookCallback);
+    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", sHookCallback);
 
-    private static List<ServiceListener> listeners = new ArrayList<>();
-
-
-    public static void addListener(ServiceListener serviceListener) {
-        if (listeners.contains(serviceListener)) return;
-        listeners.add(serviceListener);
-        boolean isSuccess = systemServiceHooker.doHook();
-        Log.d(TAG, "addListener: " + isSuccess);
+    public static int getScanTime() {
+        return scanTime;
     }
 
-    public static void removeListener(ServiceListener serviceListener) {
-        if(!listeners.contains(serviceListener)) return;
-        listeners.remove(serviceListener);
-        boolean isSuccess = systemServiceHooker.doUnHook();
-        Log.d(TAG, "removeListener: " + isSuccess);
+    public void setScanTime(int scanTime) {
+        WifiServiceHooker.scanTime = scanTime;
+    }
+
+    public static int getGetScanResultTime() {
+        return getScanResultTime;
+    }
+
+    public void setGetScanResultTime(int getScanResultTime) {
+        WifiServiceHooker.getScanResultTime = getScanResultTime;
     }
 }

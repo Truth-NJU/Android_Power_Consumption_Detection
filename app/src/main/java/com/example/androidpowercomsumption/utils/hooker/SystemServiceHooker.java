@@ -2,6 +2,7 @@ package com.example.androidpowercomsumption.utils.hooker;
 
 import android.os.IBinder;
 import android.os.IInterface;
+import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.Field;
@@ -11,8 +12,9 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 
 public class SystemServiceHooker {
-
     private static final String TAG = "SystemServiceHooker";
+
+    /*private static final String TAG = "SystemServiceHooker";
 
     private final String serviceName;
     private final String serviceClass;
@@ -124,26 +126,25 @@ public class SystemServiceHooker {
             return method.invoke(baseServiceBinder, args);
         }
 
-    }
-    /*private static final String TAG = "Matrix.battery.SystemServiceBinderHooker";
+    }*/
 
     public interface HookCallback {
-        void onServiceMethodInvoke(Method method, Object[] args);
+        void serviceMethodInvoke(Method method, Object[] args);
 
         @Nullable
-        Object onServiceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable;
+        Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable;
     }
 
     private final String mServiceName;
     private final String mServiceClass;
-    private final ServiceHookCallback mHookCallback;
+    private final HookCallback mHookCallback;
 
     @Nullable
     private IBinder mOriginServiceBinder;
     @Nullable
     private IBinder mDelegateServiceBinder;
 
-    public SystemServiceHooker(final String serviceName, final String serviceClass, final ServiceHookCallback hookCallback) {
+    public SystemServiceHooker(final String serviceName, final String serviceClass, final HookCallback hookCallback) {
         mServiceName = serviceName;
         mServiceClass = serviceClass;
         mHookCallback = hookCallback;
@@ -151,6 +152,7 @@ public class SystemServiceHooker {
 
     @SuppressWarnings({"PrivateApi", "unchecked", "rawtypes"})
     public boolean doHook() {
+        Log.d(TAG, "doHook:" + mServiceName + " " + mServiceClass);
         try {
             BinderProxyHandler binderProxyHandler = new BinderProxyHandler(mServiceName, mServiceClass, mHookCallback);
             IBinder delegateBinder = binderProxyHandler.createProxyBinder();
@@ -166,7 +168,7 @@ public class SystemServiceHooker {
             return true;
 
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.d(TAG, "#doHook exp: " + e.getLocalizedMessage());
         }
         return false;
     }
@@ -174,15 +176,18 @@ public class SystemServiceHooker {
     @SuppressWarnings({"PrivateApi", "unchecked", "rawtypes"})
     public boolean doUnHook() {
         if (mOriginServiceBinder == null) {
+            Log.d(TAG, "#doUnHook mOriginServiceBinder null");
             return false;
         }
         if (mDelegateServiceBinder == null) {
+            Log.d(TAG, "#doUnHook mDelegateServiceBinder null");
             return false;
         }
 
         try {
             IBinder currentBinder = BinderProxyHandler.getCurrentBinder(mServiceName);
             if (mDelegateServiceBinder != currentBinder) {
+                Log.d(TAG, "#doUnHook mDelegateServiceBinder != currentBinder");
                 return false;
             }
 
@@ -193,7 +198,7 @@ public class SystemServiceHooker {
             cache.put(mServiceName, mOriginServiceBinder);
             return true;
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.d(TAG, "#doUnHook exp: " + e.getLocalizedMessage());
         }
         return false;
     }
@@ -203,7 +208,7 @@ public class SystemServiceHooker {
         private final IBinder mOriginBinder;
         private final Object mServiceManagerProxy;
 
-        BinderProxyHandler(String serviceName, String serviceClass, ServiceHookCallback callback) throws Exception {
+        BinderProxyHandler(String serviceName, String serviceClass, HookCallback callback) throws Exception {
             mOriginBinder = getCurrentBinder(serviceName);
             mServiceManagerProxy = createServiceManagerProxy(serviceClass, mOriginBinder, callback);
         }
@@ -242,7 +247,7 @@ public class SystemServiceHooker {
         }
 
         @SuppressWarnings({"PrivateApi"})
-        private static Object createServiceManagerProxy(String serviceClassName, IBinder originBinder, final ServiceHookCallback callback) throws Exception {
+        private static Object createServiceManagerProxy(String serviceClassName, IBinder originBinder, final HookCallback callback) throws Exception {
             Class<?> serviceManagerCls = Class.forName(serviceClassName);
             Class<?> serviceManagerStubCls = Class.forName(serviceClassName + "$Stub");
             ClassLoader classLoader = serviceManagerStubCls.getClassLoader();
@@ -268,5 +273,5 @@ public class SystemServiceHooker {
                     }
             );
         }
-    }*/
+    }
 }
