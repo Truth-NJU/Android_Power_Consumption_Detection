@@ -104,6 +104,10 @@ public class AppStateApplication extends Application {
 
             }
         });
+
+
+//        WifiServiceHooker.sHookHelper.doHook();
+
     }
 
 
@@ -118,7 +122,7 @@ public class AppStateApplication extends Application {
 
 //        private final WifiServiceController wifiServiceController=new WifiServiceController();
 
-        private final GPSServiceController gpsServiceController=new GPSServiceController();
+        private final GPSServiceController gpsServiceController = new GPSServiceController();
 
 
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
@@ -139,7 +143,6 @@ public class AppStateApplication extends Application {
             // service
 //            wifiServiceController.start();
             gpsServiceController.start();
-
 
         }
 

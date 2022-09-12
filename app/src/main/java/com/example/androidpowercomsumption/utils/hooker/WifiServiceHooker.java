@@ -31,7 +31,7 @@ public final class WifiServiceHooker {
         }
     };
 
-    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", sHookCallback);
+    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.WifiManager", sHookCallback);
 
     public static int getScanTime() {
         return scanTime;

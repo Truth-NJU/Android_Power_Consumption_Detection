@@ -1,10 +1,10 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'aop'
 
 android {
     compileSdk 32
-
     defaultConfig {
         applicationId "com.example.androidpowercomsumption"
         minSdk 26
