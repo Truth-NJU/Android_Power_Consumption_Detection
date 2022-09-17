@@ -10,10 +10,7 @@ import android.util.Log;
 import com.example.androidpowercomsumption.controller.*;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 import com.example.androidpowercomsumption.utils.systemservice.SimulateSystemService;
-import com.example.androidpowercomsumption.utils.systemservice.hooker.AlarmServiceHooker;
-import com.example.androidpowercomsumption.utils.systemservice.hooker.BluetoothServiceHooker;
-import com.example.androidpowercomsumption.utils.systemservice.hooker.GPSServiceHooker;
-import com.example.androidpowercomsumption.utils.systemservice.hooker.WifiServiceHooker;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
 
 import java.util.List;
 
@@ -129,6 +126,8 @@ public class AppStateApplication extends Application {
 
         private final AlarmServiceController alarmServiceController=new AlarmServiceController(new AlarmServiceHooker());
 
+        private final NotificationServiceController notificationServiceController=new NotificationServiceController(new NotificationServiceHooker());
+
 
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController, Context context) {
             this.deviceStateController = deviceStateController;
@@ -151,6 +150,7 @@ public class AppStateApplication extends Application {
             gpsServiceController.start();
             bluetoothServiceController.start();
             alarmServiceController.start();
+            notificationServiceController.start();
 
 
             // todo
@@ -158,6 +158,7 @@ public class AppStateApplication extends Application {
             SimulateSystemService.gps(context);
             SimulateSystemService.bluetooth(context);
             SimulateSystemService.alarm(context);
+            SimulateSystemService.notify(context);
         }
 
         @Override
@@ -218,6 +219,7 @@ public class AppStateApplication extends Application {
             gpsServiceController.finish();
             bluetoothServiceController.finish();
             alarmServiceController.finish();
+            notificationServiceController.finish();
 
         }
     }

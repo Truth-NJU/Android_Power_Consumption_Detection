@@ -1,8 +1,7 @@
 package com.example.androidpowercomsumption.utils.systemservice;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -17,8 +16,11 @@ import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Looper;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import com.example.androidpowercomsumption.R;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SimulateSystemService {
@@ -62,7 +64,7 @@ public class SimulateSystemService {
         }
     }
 
-    public static void bluetooth(Context context){
+    public static void bluetooth(Context context) {
         BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter adapter = bluetoothManager.getAdapter();
 
@@ -84,7 +86,7 @@ public class SimulateSystemService {
     }
 
 
-    public static void alarm(Context context){
+    public static void alarm(Context context) {
         final AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent();
         intent.setAction("ALARM_ACTION(" + 10000 + ")");
@@ -94,5 +96,33 @@ public class SimulateSystemService {
         operationRef.set(pendingIntent);
 
         am.set(AlarmManager.RTC, System.currentTimeMillis(), pendingIntent);
+    }
+
+    public static void notify(Context context) {
+        final AtomicReference<NotificationChannel> channelRef = new AtomicReference<>();
+        final AtomicReference<Notification> notificationRef = new AtomicReference<>();
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        String channelId = "TEST_CHANNEL_ID";
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(channelId, "TEST_CHANNEL_NAME", NotificationManager.IMPORTANCE_DEFAULT);
+            channelRef.set(channel);
+            manager.createNotificationChannel(channel);
+        }
+
+        Notification notification = new NotificationCompat.Builder(context, channelId)
+                .setContentTitle("NOTIFICATION_TILE")
+                .setContentText("NOTIFICATION_CONTENT")
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setWhen(System.currentTimeMillis())
+                .build();
+
+        notificationRef.set(notification);
+
+        notificationManager.notify(16657, notification);
     }
 }
