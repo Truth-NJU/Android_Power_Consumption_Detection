@@ -10,7 +10,7 @@ import com.android.utils.FileUtils
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.CtMethod
-import org.gradle.api.Project;
+import org.gradle.api.Project
 
 public class AopTransformer extends Transform {
     def project
@@ -57,6 +57,8 @@ public class AopTransformer extends Transform {
                 println "========directoryInputs======== " + preFileName
                 findTargetAndSettle(it.file, preFileName)
 
+
+
                 // 2.查询输出
                 def destDir = transformInvocation.outputProvider.getContentLocation(
                         it.name,
@@ -68,6 +70,7 @@ public class AopTransformer extends Transform {
                 // 3.复制到下一环节
                 FileUtils.copyDirectory(it.file, destDir);
             }
+
         }
     }
 
@@ -121,6 +124,14 @@ public class AopTransformer extends Transform {
         for (method in methods) {
             println "method " + method.getName() + "参数个数  " + method.getParameterTypes().length
             if ("onCreate".equals(method.getName())) {
+                method.insertBefore("{ System.out.println(\"调用了" + method.getName() + "\");}")
+            }
+
+            if ("getScanResults".equals(method.getName())) {
+                method.insertBefore("{ System.out.println(\"调用了" + method.getName() + "\");}")
+            }
+
+            if ("startScan".equals(method.getName())) {
                 method.insertBefore("{ System.out.println(\"调用了" + method.getName() + "\");}")
             }
         }

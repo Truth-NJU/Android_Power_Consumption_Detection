@@ -3,6 +3,8 @@ package com.example.androidpowercomsumption.utils;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import com.example.androidpowercomsumption.controller.AppStateController;
@@ -10,6 +12,7 @@ import com.example.androidpowercomsumption.controller.DeviceStateController;
 import com.example.androidpowercomsumption.controller.GPSServiceController;
 import com.example.androidpowercomsumption.controller.ThreadController;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
+import com.example.androidpowercomsumption.utils.hooker.WifiServiceHooker;
 
 import java.util.List;
 
@@ -106,8 +109,13 @@ public class AppStateApplication extends Application {
         });
 
 
-//        WifiServiceHooker.sHookHelper.doHook();
-
+        WifiServiceHooker.sHookHelper.doHook();
+        // test
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.startScan();
+        Log.d("WifiService", "startScan: " + WifiServiceHooker.getScanTime());
+        wifiManager.getScanResults();
+        Log.d("WifiService", "getScanResults: " + WifiServiceHooker.getGetScanResultTime());
     }
 
 

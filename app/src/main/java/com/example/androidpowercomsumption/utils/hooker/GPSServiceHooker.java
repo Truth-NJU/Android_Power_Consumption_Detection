@@ -32,7 +32,7 @@ public final class GPSServiceHooker {
 
     private static List<ServiceListener> listeners = new ArrayList<>();
     private static boolean sTryHook;
-    private static SystemServiceHooker.HookCallback sHookCallback = new SystemServiceHooker.HookCallback() {
+    private static ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
             if ("requestLocationUpdates".equals(method.getName())) {

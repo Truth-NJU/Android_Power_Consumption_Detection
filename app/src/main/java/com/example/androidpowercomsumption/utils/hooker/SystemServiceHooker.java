@@ -14,7 +14,6 @@ import java.util.Map;
 public class SystemServiceHooker {
     private static final String TAG = "SystemServiceHooker";
 
-    /*private static final String TAG = "SystemServiceHooker";
 
     private final String serviceName;
     private final String serviceClass;
@@ -126,9 +125,9 @@ public class SystemServiceHooker {
             return method.invoke(baseServiceBinder, args);
         }
 
-    }*/
+    }
 
-    public interface HookCallback {
+    /*public interface HookCallback {
         void serviceMethodInvoke(Method method, Object[] args);
 
         @Nullable
@@ -261,17 +260,22 @@ public class SystemServiceHooker {
                     new InvocationHandler() {
                         @Override
                         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            if (callback != null) {
-                                callback.serviceMethodInvoke(method, args);
-                                Object result = callback.serviceMethodIntercept(originManagerService, method, args);
-                                if (result != null) {
-                                    return result;
+                            try {
+                                if (callback != null) {
+                                    callback.serviceMethodInvoke(method, args);
+                                    Object result = callback.serviceMethodIntercept(originManagerService, method, args);
+                                    if (result != null) {
+                                        return result;
+                                    }
                                 }
+                                return method.invoke(originManagerService, args);
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
-                            return method.invoke(originManagerService, args);
+                            return null;
                         }
                     }
             );
         }
-    }
+    }*/
 }

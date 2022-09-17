@@ -13,7 +13,7 @@ public final class WifiServiceHooker {
 
     private static int getScanResultTime = 0;
 
-    public static SystemServiceHooker.HookCallback sHookCallback = new SystemServiceHooker.HookCallback() {
+    public static ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
             if ("startScan".equals(method.getName())) {
@@ -21,17 +21,19 @@ public final class WifiServiceHooker {
                 Log.d(TAG, "scan++");
             } else if ("getScanResults".equals(method.getName())) {
                 getScanResultTime++;
+                Log.d(TAG, "getScanResults++");
             }
         }
 
         @Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) {
+        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
             return null;
         }
     };
 
-    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.WifiManager", sHookCallback);
+
+    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", sHookCallback);
 
     public static int getScanTime() {
         return scanTime;
