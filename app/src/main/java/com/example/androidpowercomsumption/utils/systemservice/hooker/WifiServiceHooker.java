@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption.utils.hooker;
+package com.example.androidpowercomsumption.utils.systemservice.hooker;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,11 +9,11 @@ import java.lang.reflect.Method;
 public final class WifiServiceHooker {
     private static final String TAG = "WifiService";
 
-    private static int scanTime = 0;
+    private int scanTime = 0;
 
-    private static int getScanResultTime = 0;
+    private int getScanResultTime = 0;
 
-    public static ServiceHookCallback sHookCallback = new ServiceHookCallback() {
+    public ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
             if ("startScan".equals(method.getName())) {
@@ -33,21 +33,21 @@ public final class WifiServiceHooker {
     };
 
 
-    public static SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", sHookCallback);
+    public SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.WIFI_SERVICE, "android.net.wifi.IWifiManager", sHookCallback);
 
-    public static int getScanTime() {
+    public int getScanTime() {
         return scanTime;
     }
 
     public void setScanTime(int scanTime) {
-        WifiServiceHooker.scanTime = scanTime;
+        this.scanTime = scanTime;
     }
 
-    public static int getGetScanResultTime() {
+    public int getGetScanResultTime() {
         return getScanResultTime;
     }
 
     public void setGetScanResultTime(int getScanResultTime) {
-        WifiServiceHooker.getScanResultTime = getScanResultTime;
+        this.getScanResultTime = getScanResultTime;
     }
 }

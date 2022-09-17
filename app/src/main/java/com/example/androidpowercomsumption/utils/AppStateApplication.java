@@ -7,12 +7,13 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
-import com.example.androidpowercomsumption.controller.AppStateController;
-import com.example.androidpowercomsumption.controller.DeviceStateController;
-import com.example.androidpowercomsumption.controller.GPSServiceController;
-import com.example.androidpowercomsumption.controller.ThreadController;
+import com.example.androidpowercomsumption.controller.*;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
-import com.example.androidpowercomsumption.utils.hooker.WifiServiceHooker;
+import com.example.androidpowercomsumption.utils.systemservice.SimulateSystemService;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.AlarmServiceHooker;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.BluetoothServiceHooker;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.GPSServiceHooker;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.WifiServiceHooker;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class AppStateApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //注册自己的Activity的生命周期回调接口。
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks(this.deviceStateController));
+        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks(this.deviceStateController, this));
         /**
          * 注册监听app状态和设备状态
          */
@@ -107,20 +108,12 @@ public class AppStateApplication extends Application {
 
             }
         });
-
-
-        WifiServiceHooker.sHookHelper.doHook();
-        // test
-        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        wifiManager.startScan();
-        Log.d("WifiService", "startScan: " + WifiServiceHooker.getScanTime());
-        wifiManager.getScanResults();
-        Log.d("WifiService", "getScanResults: " + WifiServiceHooker.getGetScanResultTime());
     }
 
 
     //声明一个监听Activity们生命周期的接口
     static class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
+        private Context context;
 
         private final AppStateController appStateController = new AppStateController();
 
@@ -128,13 +121,18 @@ public class AppStateApplication extends Application {
 
         private final DeviceStateController deviceStateController;
 
-//        private final WifiServiceController wifiServiceController=new WifiServiceController();
+        private final WifiServiceController wifiServiceController = new WifiServiceController(new WifiServiceHooker());
 
-        private final GPSServiceController gpsServiceController = new GPSServiceController();
+        private final GPSServiceController gpsServiceController = new GPSServiceController(new GPSServiceHooker());
+
+        private final BluetoothServiceController bluetoothServiceController = new BluetoothServiceController(new BluetoothServiceHooker());
+
+        private final AlarmServiceController alarmServiceController=new AlarmServiceController(new AlarmServiceHooker());
 
 
-        public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController) {
+        public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController, Context context) {
             this.deviceStateController = deviceStateController;
+            this.context = context;
         }
 
         /**
@@ -149,9 +147,17 @@ public class AppStateApplication extends Application {
             appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
 
             // service
-//            wifiServiceController.start();
+            wifiServiceController.start();
             gpsServiceController.start();
+            bluetoothServiceController.start();
+            alarmServiceController.start();
 
+
+            // todo
+            SimulateSystemService.wifi(context);
+            SimulateSystemService.gps(context);
+            SimulateSystemService.bluetooth(context);
+            SimulateSystemService.alarm(context);
         }
 
         @Override
@@ -208,8 +214,10 @@ public class AppStateApplication extends Application {
             deviceStateController.finish();
 
             // service
-//            wifiServiceController.finish();
+            wifiServiceController.finish();
             gpsServiceController.finish();
+            bluetoothServiceController.finish();
+            alarmServiceController.finish();
 
         }
     }
