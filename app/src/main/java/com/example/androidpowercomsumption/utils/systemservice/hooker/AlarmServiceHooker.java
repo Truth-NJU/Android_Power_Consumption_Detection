@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public class AlarmServiceHooker {
-    private static final String TAG = "AlarmService";
+    private static final String TAG = "ServiceController";
 
     private int setTime;
 
@@ -25,7 +25,7 @@ public class AlarmServiceHooker {
             if (method.getName().equals("set")
                     || method.getName().equals("setRepeating") || method.getName().equals("setInexactRepeating")) {
                 setTime++;
-                Log.d(TAG, "setTime++");
+                Log.d(TAG, "AlarmServiceHooker:setTime++");
             }
         }
 

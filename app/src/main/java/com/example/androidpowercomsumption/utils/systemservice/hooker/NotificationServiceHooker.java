@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public class NotificationServiceHooker {
-    private static final String TAG = "NotificationService";
+    private static final String TAG = "ServiceController";
 
     private int createChannelTime;
 
@@ -34,10 +34,10 @@ public class NotificationServiceHooker {
         public void serviceMethodInvoke(Method method, Object[] args) {
             if ("createNotificationChannels".equals(method.getName())) {
                 createChannelTime++;
-                Log.d(TAG, "createChannelTime++");
+                Log.d(TAG, "NotificationServiceHooker: createChannelTime++");
             } else if ("enqueueNotificationWithTag".equals(method.getName())) {
                 notifyTime++;
-                Log.d(TAG, "notifyTime++;");
+                Log.d(TAG, "NotificationServiceHooker: notifyTime++;");
             }
         }
 

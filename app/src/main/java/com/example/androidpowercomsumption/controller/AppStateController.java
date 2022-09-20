@@ -1,13 +1,15 @@
 package com.example.androidpowercomsumption.controller;
 
 import android.util.Log;
+import com.example.androidpowercomsumption.controller.servicecontroller.*;
+import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AppStateController {
 
-    private static final String TAG = "AppStateApplication";
+    private static final String TAG = "AppStateController";
     public long startTime; // 监控开始时间
 
     public long endTime; // 监控结束时间
@@ -25,7 +27,9 @@ public class AppStateController {
 
     public double backgroundRatio; // 后台运行时间占比
 
+
     public void start() {
+
         this.startTime = System.currentTimeMillis();
     }
 
@@ -39,8 +43,8 @@ public class AppStateController {
         Log.d(TAG, "前台运行时间:" + this.foregroundTime);
         Log.d(TAG, "后台运行时间:" + this.backgroundTime);
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
-        Log.d(TAG, "前台运行时间占比:" + String.valueOf(this.foregroundRatio));
-        Log.d(TAG, "后台运行时间占比:" + String.valueOf(this.backgroundRatio));
+        Log.d(TAG, "前台运行时间占比:" + this.foregroundRatio);
+        Log.d(TAG, "后台运行时间占比:" + this.backgroundRatio);
 
 
     }

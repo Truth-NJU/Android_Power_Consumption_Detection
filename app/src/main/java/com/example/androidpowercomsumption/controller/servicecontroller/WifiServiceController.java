@@ -1,11 +1,11 @@
-package com.example.androidpowercomsumption.controller;
+package com.example.androidpowercomsumption.controller.servicecontroller;
 
 
 import android.util.Log;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.WifiServiceHooker;
 
 public class WifiServiceController {
-    private final String TAG = "WifiService";
+    private final String TAG = "ServiceController";
 
     private WifiServiceHooker wifiServiceHooker;
 
@@ -19,7 +19,7 @@ public class WifiServiceController {
     }
 
     public void finish() {
-        Log.d(TAG, "scanTime: " + wifiServiceHooker.getScanTime());
-        Log.d(TAG, "getScanResultTime: " + wifiServiceHooker.getGetScanResultTime());
+        Log.d(TAG, "WifiServiceController: scanTime: " + wifiServiceHooker.getScanTime());
+        Log.d(TAG, "WifiServiceController: getScanResultTime: " + wifiServiceHooker.getGetScanResultTime());
     }
 }

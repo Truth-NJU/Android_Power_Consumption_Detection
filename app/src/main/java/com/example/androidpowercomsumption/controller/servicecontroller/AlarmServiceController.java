@@ -1,10 +1,10 @@
-package com.example.androidpowercomsumption.controller;
+package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.AlarmServiceHooker;
 
 public class AlarmServiceController {
-    private final String TAG = "AlarmService";
+    private final String TAG = "ServiceController";
 
     private AlarmServiceHooker alarmServiceHooker;
 
@@ -18,6 +18,6 @@ public class AlarmServiceController {
     }
 
     public void finish() {
-        Log.d(TAG, "setTime: " + alarmServiceHooker.getSetTime());
+        Log.d(TAG, "AlarmServiceController: setTime: " + alarmServiceHooker.getSetTime());
     }
 }

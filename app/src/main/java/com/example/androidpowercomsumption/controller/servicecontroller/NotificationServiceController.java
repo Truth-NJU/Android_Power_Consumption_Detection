@@ -1,10 +1,10 @@
-package com.example.androidpowercomsumption.controller;
+package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.NotificationServiceHooker;
 
 public class NotificationServiceController {
-    private final String TAG = "NotificationService";
+    private final String TAG = "ServiceController";
 
     private NotificationServiceHooker notificationServiceHooker;
 
@@ -18,7 +18,7 @@ public class NotificationServiceController {
     }
 
     public void finish() {
-        Log.d(TAG, "createChannelTime: " + notificationServiceHooker.getCreateChannelTime());
-        Log.d(TAG, "notifyTime: " + notificationServiceHooker.getNotifyTime());
+        Log.d(TAG, "NotificationServiceController: createChannelTime: " + notificationServiceHooker.getCreateChannelTime());
+        Log.d(TAG, "NotificationServiceController: notifyTime: " + notificationServiceHooker.getNotifyTime());
     }
 }

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DeviceStateController {
-    private static final String TAG = "AppStateApplication";
+    private static final String TAG = "AppStateController";
     public long startTime; // 监控开始时间
 
     public long endTime; // 监控结束时间
@@ -46,11 +46,11 @@ public class DeviceStateController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
-        Log.d(TAG + "Device", "息屏时间:" + this.screenOffTime);
-        Log.d(TAG + "Device", "亮屏时间:" + this.screenOnTime);
-        Log.d(TAG + "Device", "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
-        Log.d(TAG + "Device", "息屏时间占比:" + String.valueOf(this.screenOffRatio));
-        Log.d(TAG + "Device", "亮屏时间占比:" + String.valueOf(this.screenOnRatio));
+        Log.d(TAG, "息屏时间:" + this.screenOffTime);
+        Log.d(TAG, "亮屏时间:" + this.screenOnTime);
+        Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
+        Log.d(TAG, "息屏时间占比:" + String.valueOf(this.screenOffRatio));
+        Log.d(TAG, "亮屏时间占比:" + String.valueOf(this.screenOnRatio));
 
 //        this.chargeRatio = this.chargeTime * 1.0 / (this.chargeTime + this.noChargeTime);
 //        Log.d(TAG + "Device", "充电时间占比:" + String.valueOf(this.chargeRatio));

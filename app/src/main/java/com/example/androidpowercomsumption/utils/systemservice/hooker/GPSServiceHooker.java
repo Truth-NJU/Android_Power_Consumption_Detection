@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 public final class GPSServiceHooker {
 
-    private static final String TAG = "GPSService";
+    private static final String TAG = "ServiceController";
 
     private int scanTime = 0;
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
@@ -35,7 +35,7 @@ public final class GPSServiceHooker {
                     for (Object item : args) {
                         if (item != null && "android.location.LocationRequest".equals(item.getClass().getName())) {
                             scanTime++;
-                            Log.d(TAG, "scanTime++");
+                            Log.d(TAG, "GPSServiceHooker: scanTime++");
                         }
                     }
                 }

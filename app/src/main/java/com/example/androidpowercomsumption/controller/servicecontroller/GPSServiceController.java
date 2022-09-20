@@ -1,11 +1,11 @@
-package com.example.androidpowercomsumption.controller;
+package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.GPSServiceHooker;
 
 public class GPSServiceController {
 
-    private final String TAG = "GPSService";
+    private final String TAG = "ServiceController";
 
     private GPSServiceHooker gpsServiceHooker;
 
@@ -18,6 +18,6 @@ public class GPSServiceController {
     }
 
     public void finish() {
-        Log.d(TAG, "GPS请求扫描的次数:" + gpsServiceHooker.getScanTime());
+        Log.d(TAG, "GPSServiceController: GPS请求扫描的次数:" + gpsServiceHooker.getScanTime());
     }
 }

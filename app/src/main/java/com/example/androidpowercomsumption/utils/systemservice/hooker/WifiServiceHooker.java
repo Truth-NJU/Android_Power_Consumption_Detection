@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public final class WifiServiceHooker {
-    private static final String TAG = "WifiService";
+    private static final String TAG = "ServiceController";
 
     private int scanTime = 0;
 
@@ -18,10 +18,10 @@ public final class WifiServiceHooker {
         public void serviceMethodInvoke(Method method, Object[] args) {
             if ("startScan".equals(method.getName())) {
                 scanTime++;
-                Log.d(TAG, "scan++");
+                Log.d(TAG, "WifiServiceHooker: scan++");
             } else if ("getScanResults".equals(method.getName())) {
                 getScanResultTime++;
-                Log.d(TAG, "getScanResults++");
+                Log.d(TAG, "WifiServiceHooker: getScanResults++");
             }
         }
 

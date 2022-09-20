@@ -1,10 +1,10 @@
-package com.example.androidpowercomsumption.controller;
+package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.BluetoothServiceHooker;
 
 public class BluetoothServiceController {
-    private final String TAG = "BleService";
+    private final String TAG = "ServiceController";
 
     private BluetoothServiceHooker bluetoothServiceHooker;
 
@@ -18,8 +18,8 @@ public class BluetoothServiceController {
     }
 
     public void finish() {
-        Log.d(TAG, "scanTime: " + bluetoothServiceHooker.getScanTime());
-        Log.d(TAG, "registerTime: " + bluetoothServiceHooker.getRegisterTime());
-        Log.d(TAG, "discoveryTime: " + bluetoothServiceHooker.getDiscoveryTime());
+        Log.d(TAG, "BluetoothServiceController: scanTime: " + bluetoothServiceHooker.getScanTime());
+        Log.d(TAG, "BluetoothServiceController: registerTime: " + bluetoothServiceHooker.getRegisterTime());
+        Log.d(TAG, "BluetoothServiceController: discoveryTime: " + bluetoothServiceHooker.getDiscoveryTime());
     }
 }

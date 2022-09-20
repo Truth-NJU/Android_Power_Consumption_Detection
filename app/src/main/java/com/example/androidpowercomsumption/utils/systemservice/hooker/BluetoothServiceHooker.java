@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 public class BluetoothServiceHooker {
-    private static final String TAG = "BleService";
+    private static final String TAG = "ServiceController";
 
     private int registerTime = 0;
 
@@ -80,7 +80,7 @@ public class BluetoothServiceHooker {
                 public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
                     if ("startDiscovery".equals(method.getName())) {
                         discoveryTime++;
-                        Log.d(TAG, "discoveryTime++");
+                        Log.d(TAG, "BluetoothServiceHooker: discoveryTime++");
                     }
 
                     return method.invoke(delegate, args);
@@ -103,10 +103,10 @@ public class BluetoothServiceHooker {
                 public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
                     if ("registerScanner".equals(method.getName())) {
                         registerTime++;
-                        Log.d(TAG, "registerTime++");
+                        Log.d(TAG, "BluetoothServiceHooker: registerTime++");
                     } else if ("startScan".equals(method.getName()) || "startScanForIntent".equals(method.getName())) {
                         scanTime++;
-                        Log.d(TAG, "scanTime++");
+                        Log.d(TAG, "BluetoothServiceHooker: scanTime++");
                     }
                     return method.invoke(delegate, args);
                 }
