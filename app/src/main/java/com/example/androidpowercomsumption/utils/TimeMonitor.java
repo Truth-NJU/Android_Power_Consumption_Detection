@@ -8,6 +8,8 @@ import com.example.androidpowercomsumption.controller.servicecontroller.*;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -28,15 +30,15 @@ public class TimeMonitor {
 
     private DeviceStateController deviceStateController;
 
-    private WifiServiceController wifiServiceController = new WifiServiceController(new WifiServiceHooker());
+    private WifiServiceController wifiServiceController;
 
-    private GPSServiceController gpsServiceController = new GPSServiceController(new GPSServiceHooker());
+    private GPSServiceController gpsServiceController;
 
-    private BluetoothServiceController bluetoothServiceController = new BluetoothServiceController(new BluetoothServiceHooker());
+    private BluetoothServiceController bluetoothServiceController;
 
-    private AlarmServiceController alarmServiceController = new AlarmServiceController(new AlarmServiceHooker());
+    private AlarmServiceController alarmServiceController;
 
-    private NotificationServiceController notificationServiceController = new NotificationServiceController(new NotificationServiceHooker());
+    private NotificationServiceController notificationServiceController;
 
     private boolean isFirst = true; // 第一次启动并且进入前台
 
@@ -64,9 +66,12 @@ public class TimeMonitor {
         return System.currentTimeMillis();
     }
 
-    public String getCurrentFormatTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
-        Date date = new Date(this.getCurrentTime());
+    // 上一次记录日志的时间
+    private long lastLogTime;
+
+    public String getCurrentFormatTime(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd/HH:mm:ss");
+        Date date = new Date(time);
         return format.format(date);
     }
 
@@ -75,6 +80,9 @@ public class TimeMonitor {
         appStateController.start();
         appStateController.status = true; // 前台状态
         appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
+
+        this.startMonitorTime = getCurrentTime();
+        this.lastLogTime = getCurrentTime();
     }
 
     // app由前台进入后台
@@ -83,6 +91,7 @@ public class TimeMonitor {
         // 结束前台时间段的监控
         // todo 输出报告
         Log.d("ServiceController", "App前台运行时间段内调用系统服务次数");
+        LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于前台运行)");
         stopServiceHooker();
         stopThreadMonitor();
         // 开启后台时间段的监控
@@ -96,6 +105,7 @@ public class TimeMonitor {
             appStateController.foregroundTime += (appStateController.curStatusEndTime - appStateController.curStatusStartTime);
             appStateController.curStatusStartTime = System.currentTimeMillis(); // 前台进入后台，后台状态的开始时间
         }
+        this.lastLogTime = getCurrentTime();
     }
 
     public void onActivityStarted() {
@@ -111,6 +121,7 @@ public class TimeMonitor {
             // 结束后台时间段的监控，做一次输出
             // todo 输出报告
             Log.d("ServiceController", "App后运行时间段内调用系统服务次数");
+            LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于后运行)");
             stopServiceHooker();
             stopThreadMonitor();
             // 开始前台时间段的监控
@@ -125,10 +136,12 @@ public class TimeMonitor {
             appStateController.curStatusStartTime = System.currentTimeMillis();// 后台进入前台，前台状态的开始时间
 
         }
-
+        this.lastLogTime = getCurrentTime();
     }
 
     public void onActivityDestroyed() {
+        this.stopMonitorTime = getCurrentTime();
+        LogFileWriter.write(getCurrentFormatTime(this.getStartMonitorTime()) + "~" + getCurrentFormatTime(this.getStopMonitorTime()) + ":(APP整个运行阶段)");
         appStateController.finish();
         deviceStateController.finish();
     }
@@ -167,6 +180,7 @@ public class TimeMonitor {
         List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
         for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
             Log.d(TAG, threadDiff.toString());
+            LogFileWriter.write("线程" + threadDiff.comm + "的jiffy消耗:" + threadDiff.jiffiesDiff);
         }
     }
 }

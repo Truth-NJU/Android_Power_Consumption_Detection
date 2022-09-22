@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.controller;
 
 import android.util.Log;
+import com.example.androidpowercomsumption.utils.LogFileWriter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,10 +48,14 @@ public class DeviceStateController {
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
         Log.d(TAG, "息屏时间:" + this.screenOffTime);
+        LogFileWriter.write("息屏时间:" + this.screenOffTime);
         Log.d(TAG, "亮屏时间:" + this.screenOnTime);
+        LogFileWriter.write("亮屏时间:" + this.screenOnTime);
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
         Log.d(TAG, "息屏时间占比:" + String.valueOf(this.screenOffRatio));
+        LogFileWriter.write("息屏时间占比:" + String.valueOf(this.screenOffRatio));
         Log.d(TAG, "亮屏时间占比:" + String.valueOf(this.screenOnRatio));
+        LogFileWriter.write("亮屏时间占比:" + String.valueOf(this.screenOnRatio));
 
 //        this.chargeRatio = this.chargeTime * 1.0 / (this.chargeTime + this.noChargeTime);
 //        Log.d(TAG + "Device", "充电时间占比:" + String.valueOf(this.chargeRatio));

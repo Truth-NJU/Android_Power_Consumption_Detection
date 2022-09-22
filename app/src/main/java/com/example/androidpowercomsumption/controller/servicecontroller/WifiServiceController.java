@@ -2,6 +2,7 @@ package com.example.androidpowercomsumption.controller.servicecontroller;
 
 
 import android.util.Log;
+import com.example.androidpowercomsumption.utils.LogFileWriter;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.WifiServiceHooker;
 
 public class WifiServiceController {
@@ -20,6 +21,8 @@ public class WifiServiceController {
 
     public void finish() {
         Log.d(TAG, "WifiServiceController: scanTime: " + wifiServiceHooker.getScanTime());
+        LogFileWriter.write("搜索wifi的次数: " + wifiServiceHooker.getScanTime());
         Log.d(TAG, "WifiServiceController: getScanResultTime: " + wifiServiceHooker.getGetScanResultTime());
+        LogFileWriter.write("查询搜索结果次数: " + wifiServiceHooker.getGetScanResultTime());
     }
 }

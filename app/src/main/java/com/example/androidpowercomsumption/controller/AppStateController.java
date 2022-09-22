@@ -2,6 +2,7 @@ package com.example.androidpowercomsumption.controller;
 
 import android.util.Log;
 import com.example.androidpowercomsumption.controller.servicecontroller.*;
+import com.example.androidpowercomsumption.utils.LogFileWriter;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
 
 import java.text.SimpleDateFormat;
@@ -41,10 +42,18 @@ public class AppStateController {
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
         Log.d(TAG, "前台运行时间:" + this.foregroundTime);
+        LogFileWriter.write("前台运行时间:" + this.foregroundTime);
+
         Log.d(TAG, "后台运行时间:" + this.backgroundTime);
+        LogFileWriter.write("后台运行时间:" + this.backgroundTime);
+
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
+
         Log.d(TAG, "前台运行时间占比:" + this.foregroundRatio);
+        LogFileWriter.write("前台运行时间占比:" + this.foregroundRatio);
+
         Log.d(TAG, "后台运行时间占比:" + this.backgroundRatio);
+        LogFileWriter.write("后台运行时间占比:" + this.backgroundRatio);
 
 
     }

@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
+import com.example.androidpowercomsumption.utils.LogFileWriter;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.GPSServiceHooker;
 
 public class GPSServiceController {
@@ -19,5 +20,6 @@ public class GPSServiceController {
 
     public void finish() {
         Log.d(TAG, "GPSServiceController: GPS请求扫描的次数:" + gpsServiceHooker.getScanTime());
+        LogFileWriter.write("GPS请求扫描的次数: " + gpsServiceHooker.getScanTime());
     }
 }

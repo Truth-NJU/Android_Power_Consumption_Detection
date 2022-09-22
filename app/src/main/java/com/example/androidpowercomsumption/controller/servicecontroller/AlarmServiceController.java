@@ -1,6 +1,7 @@
 package com.example.androidpowercomsumption.controller.servicecontroller;
 
 import android.util.Log;
+import com.example.androidpowercomsumption.utils.LogFileWriter;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.AlarmServiceHooker;
 
 public class AlarmServiceController {
@@ -18,6 +19,7 @@ public class AlarmServiceController {
     }
 
     public void finish() {
+        LogFileWriter.write("调用设置提醒服务的次数: " + alarmServiceHooker.getSetTime());
         Log.d(TAG, "AlarmServiceController: setTime: " + alarmServiceHooker.getSetTime());
     }
 }
