@@ -192,6 +192,12 @@ public class AppStateApplication extends Application {
         @Override
         public void onActivityStopped(Activity activity) {
             timeMonitor.onActivityStopped();
+            // todo
+            SimulateSystemService.wifi(context);
+            SimulateSystemService.gps(context);
+            SimulateSystemService.bluetooth(context);
+            SimulateSystemService.alarm(context);
+            SimulateSystemService.notify(context);
 //            Log.d(TAG, "App进入后台");
 //            if (appStateController.status) { // 由前台进入后台
 //                appStateController.status = false;

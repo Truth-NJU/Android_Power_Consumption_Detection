@@ -76,6 +76,21 @@ public class TimeMonitor {
     }
 
     public void startMonitor() {
+        // create file
+        String filePath = "/data/data/com.example.androidpowercomsumption/files/data.txt";
+        File file = null;
+        try {
+            file = new File(filePath);
+            if (!file.exists()) {
+                file.createNewFile();
+            }else{
+                file.delete();
+                file.createNewFile();
+            }
+
+        } catch (Exception e) {
+            Log.i("error:", e + "");
+        }
         // 只会在启动的时候触发一次
         appStateController.start();
         appStateController.status = true; // 前台状态
@@ -91,6 +106,7 @@ public class TimeMonitor {
         // 结束前台时间段的监控
         // todo 输出报告
         Log.d("ServiceController", "App前台运行时间段内调用系统服务次数");
+        LogFileWriter.write("=================================================================");
         LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于前台运行)");
         stopServiceHooker();
         stopThreadMonitor();
@@ -121,6 +137,7 @@ public class TimeMonitor {
             // 结束后台时间段的监控，做一次输出
             // todo 输出报告
             Log.d("ServiceController", "App后运行时间段内调用系统服务次数");
+            LogFileWriter.write("=================================================================");
             LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于后运行)");
             stopServiceHooker();
             stopThreadMonitor();
@@ -141,6 +158,10 @@ public class TimeMonitor {
 
     public void onActivityDestroyed() {
         this.stopMonitorTime = getCurrentTime();
+
+        LogFileWriter.write("");
+        LogFileWriter.write("");
+        LogFileWriter.write("=================================================================");
         LogFileWriter.write(getCurrentFormatTime(this.getStartMonitorTime()) + "~" + getCurrentFormatTime(this.getStopMonitorTime()) + ":(APP整个运行阶段)");
         appStateController.finish();
         deviceStateController.finish();
