@@ -7,11 +7,11 @@ import java.util.List;
 
 public class ThreadConsumptionDiff {
 
-    private long CPURuntTime;
-
-    public ThreadConsumptionDiff(long CPURuntTime) {
-        this.CPURuntTime = CPURuntTime;
-    }
+//    private long CPURuntTime;
+//
+//    public ThreadConsumptionDiff(long CPURuntTime) {
+//        this.CPURuntTime = CPURuntTime;
+//    }
 
     /**
      * 计算时间段内线程的功耗
@@ -30,8 +30,6 @@ public class ThreadConsumptionDiff {
                     threadDiff.state = procState2.getStat();
                     threadDiff.jiffiesDiff = procState2.getJiffies() - procState1.getJiffies();
                     threadDiff.tid = procState2.getId();
-                    long processOnCPUTime = procState2.getUtime() + procState2.getStime() + procState2.getCutime() + procState2.getCstime() - (procState1.getUtime() + procState1.getStime() + procState1.getCutime() + procState1.getCstime());
-                    threadDiff.cpuLoad = processOnCPUTime * 1.0 / this.CPURuntTime;
                     threadDiffList.add(threadDiff);
                 }
             }
@@ -55,8 +53,6 @@ public class ThreadConsumptionDiff {
 
         public String endTime;
 
-        public double cpuLoad;// cpu利用率
-
 
         @Override
         public String toString() {
@@ -67,7 +63,6 @@ public class ThreadConsumptionDiff {
                     ", tid=" + tid +
                     ", startTime='" + startTime + '\'' +
                     ", endTime='" + endTime + '\'' +
-                    ", cpuLoad=" + cpuLoad +
                     '}';
         }
     }

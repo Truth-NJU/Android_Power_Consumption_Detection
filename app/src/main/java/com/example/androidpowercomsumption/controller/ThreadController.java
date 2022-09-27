@@ -27,9 +27,9 @@ public class ThreadController {
     public List<ProcState> curProcState;
 
 
-    public long preCPUTime; // 监控开始时cpu运行的时间
+    // public long preCPUTime; // 监控开始时cpu运行的时间
 
-    public long curCPUTime; // 监控结束时cpu运行的时间
+    // public long curCPUTime; // 监控结束时cpu运行的时间
 
 
     public List<ThreadConsumptionDiff.ThreadDiff> threadDiffList;
@@ -41,20 +41,18 @@ public class ThreadController {
         // 线程
         ProcStateUtil procStateUtil = new ProcStateUtil();
         preProcState = procStateUtil.getAllThreadInfo();
-        this.preCPUTime = procStateUtil.getCPUStatus();
+        // this.preCPUTime = procStateUtil.getCPUStatus();
     }
 
 
     public void finish() {
         // 对结束时间的系统状态做快照
         this.endTime = System.currentTimeMillis();
-        this.curCPUTime = new ProcStateUtil().getCPUStatus();
+        // this.curCPUTime = new ProcStateUtil().getCPUStatus();
         // 线程
         ProcStateUtil procStateUtil = new ProcStateUtil();
         curProcState = procStateUtil.getAllThreadInfo();
-        // todo
-        // ThreadConsumptionDiff threadConsumptionDiff = new ThreadConsumptionDiff(this.curCPUTime - this.preCPUTime);
-        ThreadConsumptionDiff threadConsumptionDiff = new ThreadConsumptionDiff(1);
+        ThreadConsumptionDiff threadConsumptionDiff = new ThreadConsumptionDiff();
         this.threadDiffList = threadConsumptionDiff.calculateDiff(this.preProcState, this.curProcState);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
 
@@ -67,7 +65,7 @@ public class ThreadController {
         for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
             Log.d(TAG, threadDiff.toString());
             if (threadDiff.jiffiesDiff == 0) continue;
-            LogFileWriter.write("线程" + threadDiff.comm + "的jiffy消耗:" + threadDiff.jiffiesDiff + "|CPU占用率:" + threadDiff.cpuLoad);
+            LogFileWriter.write("线程" + threadDiff.comm + "的jiffy消耗:" + threadDiff.jiffiesDiff + "|线程状态:" + threadDiff.state);
         }
     }
 }

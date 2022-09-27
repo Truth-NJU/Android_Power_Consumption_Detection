@@ -142,19 +142,19 @@ public class ProcStateUtil {
 
     // 获得CPU的运行时间
     public long getCPUStatus() {
-//        try {
-//            RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
-//            String procStr = reader.readLine();
-//            String[] cpuInfo = procStr.split(" ");
-//            long cpuTime = 0;
-//            for (int i = 1; i <= 7; i++) {
-//                cpuTime += Long.parseLong(cpuInfo[i]);
-//            }
-//            reader.close();
-//            return cpuTime;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            RandomAccessFile reader = new RandomAccessFile("/proc/stat/", "r");
+            String procStr = reader.readLine();
+            String[] cpuInfo = procStr.split(" ");
+            long cpuTime = 0;
+            for (int i = 1; i <= 7; i++) {
+                cpuTime += Long.parseLong(cpuInfo[i]);
+            }
+            reader.close();
+            return cpuTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 }
