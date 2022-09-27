@@ -19,6 +19,7 @@ public class BluetoothServiceController {
     }
 
     public void finish() {
+        bluetoothServiceHooker.sHookHelper.doUnHook();
         Log.d(TAG, "BluetoothServiceController: scanTime: " + bluetoothServiceHooker.getScanTime());
         LogFileWriter.write("搜索蓝牙的次数: " + bluetoothServiceHooker.getScanTime());
         Log.d(TAG, "BluetoothServiceController: registerTime: " + bluetoothServiceHooker.getRegisterTime());

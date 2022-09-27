@@ -13,14 +13,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
-//        threadController.finish();
-//        List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
-//        for(ThreadConsumptionDiff.ThreadDiff threadDiff:threadDiffList){
-//            Log.d(TAG, threadDiff.toString());
-//        }
     }
 
 

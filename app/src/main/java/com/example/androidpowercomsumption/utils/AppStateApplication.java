@@ -4,16 +4,11 @@ package com.example.androidpowercomsumption.utils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import com.example.androidpowercomsumption.controller.*;
-import com.example.androidpowercomsumption.controller.servicecontroller.*;
-import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 import com.example.androidpowercomsumption.utils.systemservice.SimulateSystemService;
-import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
-
-import java.util.List;
 
 
 public class AppStateApplication extends Application {
@@ -144,74 +139,30 @@ public class AppStateApplication extends Application {
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             timeMonitor.startMonitor();
-//            // 只会在启动的时候触发一次
-//            appStateController.start();
-//            appStateController.status = true; // 前台状态
-//            appStateController.curStatusStartTime = appStateController.startTime; // 当前状态的开始时间
-//
-//            // service hook
-//            wifiServiceController.start();
-//            gpsServiceController.start();
-//            bluetoothServiceController.start();
-//            alarmServiceController.start();
-//            notificationServiceController.start();
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
-            timeMonitor.onActivityStarted();
-            // todo
-            SimulateSystemService.wifi(context);
-            SimulateSystemService.gps(context);
-            SimulateSystemService.bluetooth(context);
-            SimulateSystemService.alarm(context);
-            SimulateSystemService.notify(context);
-//            // 对于线程功耗监控，每次app状态切换都要进行监控
-//            threadController = new ThreadController();
-//            threadController.start();
-//
-//            // 前后台运行监控
-//            Log.d(TAG, "APP进入前台");
-//            if (!appStateController.status) { // 后台进入前台
-//                appStateController.status = true;
-//                appStateController.curStatusEndTime = System.currentTimeMillis();// 后台状态的结束时间
-//                appStateController.backgroundTime += (appStateController.curStatusEndTime - appStateController.curStatusStartTime);
-//                appStateController.curStatusStartTime = System.currentTimeMillis();// 后台进入前台，前台状态的开始时间
-//
-//            }
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            timeMonitor.onActivityStopped();
+            timeMonitor.toFrontend();
             // todo
             SimulateSystemService.wifi(context);
             SimulateSystemService.gps(context);
             SimulateSystemService.bluetooth(context);
             SimulateSystemService.alarm(context);
             SimulateSystemService.notify(context);
-//            Log.d(TAG, "App进入后台");
-//            if (appStateController.status) { // 由前台进入后台
-//                appStateController.status = false;
-//                appStateController.curStatusEndTime = System.currentTimeMillis(); // 前台状态的结束时间
-//                appStateController.foregroundTime += (appStateController.curStatusEndTime - appStateController.curStatusStartTime);
-//                appStateController.curStatusStartTime = System.currentTimeMillis(); // 前台进入后台，后台状态的开始时间
-//            }
-//
-//            threadController.finish();
-//            List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
-//            for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
-//                Log.d(TAG, threadDiff.toString());
-//            }
+        }
 
+        @Override
+        public void onActivityPaused(Activity activity) {
+            timeMonitor.toBackend();
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
 
         }
 
@@ -220,20 +171,14 @@ public class AppStateApplication extends Application {
         }
 
         @Override
-        public void onActivityDestroyed(Activity activity) {
-            timeMonitor.onActivityDestroyed();
-//            appStateController.finish();
-//            deviceStateController.finish();
-//
-//            // service
-//            wifiServiceController.finish();
-//            gpsServiceController.finish();
-//            bluetoothServiceController.finish();
-//            alarmServiceController.finish();
-//            notificationServiceController.finish();
+        public void onActivityPreDestroyed(Activity activity) {
+            timeMonitor.stopMonitor();
+        }
+
+        @Override
+        public void onActivityDestroyed(@NonNull Activity activity) {
+
         }
     }
-
-    ;
 
 }

@@ -7,6 +7,12 @@ import java.util.List;
 
 public class ThreadConsumptionDiff {
 
+    private long CPURuntTime;
+
+    public ThreadConsumptionDiff(long CPURuntTime) {
+        this.CPURuntTime = CPURuntTime;
+    }
+
     /**
      * 计算时间段内线程的功耗
      *
@@ -18,12 +24,14 @@ public class ThreadConsumptionDiff {
         List<ThreadDiff> threadDiffList = new ArrayList<>();
         for (ProcState procState1 : preProcState) {
             for (ProcState procState2 : curProcState) {
-                if (procState1.getId() == procState2.getId()  && procState1.getComm().equals(procState2.getComm())){
+                if (procState1.getId() == procState2.getId() && procState1.getComm().equals(procState2.getComm())) {
                     ThreadDiff threadDiff = new ThreadDiff();
                     threadDiff.comm = procState1.getComm();
                     threadDiff.state = procState2.getStat();
                     threadDiff.jiffiesDiff = procState2.getJiffies() - procState1.getJiffies();
                     threadDiff.tid = procState2.getId();
+                    long processOnCPUTime = procState2.getUtime() + procState2.getStime() + procState2.getCutime() + procState2.getCstime() - (procState1.getUtime() + procState1.getStime() + procState1.getCutime() + procState1.getCstime());
+                    threadDiff.cpuLoad = processOnCPUTime * 1.0 / this.CPURuntTime;
                     threadDiffList.add(threadDiff);
                 }
             }
@@ -47,6 +55,9 @@ public class ThreadConsumptionDiff {
 
         public String endTime;
 
+        public double cpuLoad;// cpu利用率
+
+
         @Override
         public String toString() {
             return "ThreadDiff{" +
@@ -54,8 +65,9 @@ public class ThreadConsumptionDiff {
                     ", comm='" + comm + '\'' +
                     ", state='" + state + '\'' +
                     ", tid=" + tid +
-                    ", startTime=" + startTime +
-                    ", endTime=" + endTime +
+                    ", startTime='" + startTime + '\'' +
+                    ", endTime='" + endTime + '\'' +
+                    ", cpuLoad=" + cpuLoad +
                     '}';
         }
     }

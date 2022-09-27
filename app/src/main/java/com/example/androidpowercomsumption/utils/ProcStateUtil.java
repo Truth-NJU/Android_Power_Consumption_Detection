@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * app 进程即线程状态，通过读 /proc/pid/stat 和  /proc/pid/task/tid/stat 文件里面的信息，
  * 主要是得到 app 运行的进程、线程名，app 运行时和 app 内线程的用户时间、系统时间、等待的系统时间和用户时间
- *
+ * <p>
  * /proc/pid/stat:
  * 4218 (owercomsumption) R 301 301 0 0 -1 4194624 8707 0 0 0 32 34 0 0 10
  * -10 18 0 195290 1306812416 30324 18446744073709551615 1504755712 1504782416
@@ -44,7 +44,7 @@ import java.util.List;
  * - vsize: 进程的虚拟内存大小, 单位为bytes
  * - rss: 进程独占内存+共享库, 单位pages, 此处等于93087
  * - rsslim: rss大小上限
- *
+ * <p>
  * 说明:
  * 第10~17行主要是随着时间而改变的量；
  * 内核时间单位, sysconf(_SC_CLK_TCK)一般地定义为jiffies(一般地等于10ms)
@@ -84,10 +84,10 @@ public class ProcStateUtil {
             RandomAccessFile reader = new RandomAccessFile(path, "r");
             String procStr = reader.readLine();
             // 找出线程的名称，需要特殊处理
-            int beginIndex=procStr.indexOf("(");
-            int lastIndex=procStr.indexOf(")");
-            String comm=procStr.substring(beginIndex+1,lastIndex);
-            procStr=procStr.substring(0,beginIndex)+procStr.substring(lastIndex+2);
+            int beginIndex = procStr.indexOf("(");
+            int lastIndex = procStr.indexOf(")");
+            String comm = procStr.substring(beginIndex + 1, lastIndex);
+            procStr = procStr.substring(0, beginIndex) + procStr.substring(lastIndex + 2);
 //            Log.d(TAG, procStr);
             String[] procStateInfo = procStr.split(" ");
 //            Log.d(TAG, String.valueOf(procStateInfo.length));
@@ -138,5 +138,23 @@ public class ProcStateUtil {
             e.printStackTrace();
         }
         return threadList;
+    }
+
+    // 获得CPU的运行时间
+    public long getCPUStatus() {
+//        try {
+//            RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+//            String procStr = reader.readLine();
+//            String[] cpuInfo = procStr.split(" ");
+//            long cpuTime = 0;
+//            for (int i = 1; i <= 7; i++) {
+//                cpuTime += Long.parseLong(cpuInfo[i]);
+//            }
+//            reader.close();
+//            return cpuTime;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        return 0;
     }
 }

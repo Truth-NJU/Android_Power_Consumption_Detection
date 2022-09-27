@@ -38,14 +38,14 @@ public class AppStateController {
         this.endTime = System.currentTimeMillis();
         this.foregroundRatio = foregroundTime * 1.0 / (this.foregroundTime + this.backgroundTime);
         this.backgroundRatio = backgroundTime * 1.0 / (this.foregroundTime + this.backgroundTime);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd/HH:mm:ss");
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
         Log.d(TAG, "前台运行时间:" + this.foregroundTime);
-        LogFileWriter.write("前台运行时间:" + this.foregroundTime);
+        LogFileWriter.write("前台运行时间:" + this.foregroundTime + " ms");
 
         Log.d(TAG, "后台运行时间:" + this.backgroundTime);
-        LogFileWriter.write("后台运行时间:" + this.backgroundTime);
+        LogFileWriter.write("后台运行时间:" + this.backgroundTime + " ms");
 
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
 

@@ -5,14 +5,11 @@ import com.example.androidpowercomsumption.controller.AppStateController;
 import com.example.androidpowercomsumption.controller.DeviceStateController;
 import com.example.androidpowercomsumption.controller.ThreadController;
 import com.example.androidpowercomsumption.controller.servicecontroller.*;
-import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.*;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 监控设备运行的时间
@@ -101,7 +98,7 @@ public class TimeMonitor {
     }
 
     // app由前台进入后台
-    public void onActivityStopped() {
+    public void toBackend() {
         Log.d(TAG, "App进入后台");
         // 结束前台时间段的监控
         // todo 输出报告
@@ -124,7 +121,7 @@ public class TimeMonitor {
         this.lastLogTime = getCurrentTime();
     }
 
-    public void onActivityStarted() {
+    public void toFrontend() {
 
         Log.d(TAG, "APP进入前台");
 
@@ -156,7 +153,7 @@ public class TimeMonitor {
         this.lastLogTime = getCurrentTime();
     }
 
-    public void onActivityDestroyed() {
+    public void stopMonitor() {
         this.stopMonitorTime = getCurrentTime();
 
         LogFileWriter.write("");
@@ -198,10 +195,5 @@ public class TimeMonitor {
 
     public void stopThreadMonitor() {
         threadController.finish();
-        List<ThreadConsumptionDiff.ThreadDiff> threadDiffList = threadController.threadDiffList;
-        for (ThreadConsumptionDiff.ThreadDiff threadDiff : threadDiffList) {
-            Log.d(TAG, threadDiff.toString());
-            LogFileWriter.write("线程" + threadDiff.comm + "的jiffy消耗:" + threadDiff.jiffiesDiff);
-        }
     }
 }

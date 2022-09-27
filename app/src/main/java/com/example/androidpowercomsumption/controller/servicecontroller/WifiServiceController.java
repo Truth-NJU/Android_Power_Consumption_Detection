@@ -20,6 +20,7 @@ public class WifiServiceController {
     }
 
     public void finish() {
+        wifiServiceHooker.sHookHelper.doUnHook();
         Log.d(TAG, "WifiServiceController: scanTime: " + wifiServiceHooker.getScanTime());
         LogFileWriter.write("搜索wifi的次数: " + wifiServiceHooker.getScanTime());
         Log.d(TAG, "WifiServiceController: getScanResultTime: " + wifiServiceHooker.getGetScanResultTime());

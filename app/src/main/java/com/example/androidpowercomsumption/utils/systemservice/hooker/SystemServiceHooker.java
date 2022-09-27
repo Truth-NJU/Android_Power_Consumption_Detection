@@ -60,8 +60,6 @@ public class SystemServiceHooker {
     public boolean doUnHook() {
         try {
             Class<?> serviceManager = Class.forName("android.os.ServiceManager");
-
-            // 判断当前IBinder是否为嗲里嗲气IBinder
             Method method = serviceManager.getDeclaredMethod("getService", String.class);
             IBinder currentBinder = (IBinder) method.invoke(null, serviceName);
             if (currentBinder != proxyServiceBinder) return false;

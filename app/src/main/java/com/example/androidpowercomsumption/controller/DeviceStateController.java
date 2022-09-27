@@ -44,18 +44,20 @@ public class DeviceStateController {
         this.endTime = System.currentTimeMillis();
         this.screenOffRatio = screenOffTime * 1.0 / (this.screenOffTime + this.screenOnTime);
         this.screenOnRatio = screenOnTime * 1.0 / (this.screenOffTime + this.screenOnTime);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日-HH时mm分ss秒");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd/HH:mm:ss");
         Date startDate = new Date(this.startTime);
         Date endDate = new Date(this.endTime);
         Log.d(TAG, "息屏时间:" + this.screenOffTime);
-        LogFileWriter.write("息屏时间:" + this.screenOffTime);
+        LogFileWriter.write("息屏时间:" + this.screenOffTime + " ms");
         Log.d(TAG, "亮屏时间:" + this.screenOnTime);
-        LogFileWriter.write("亮屏时间:" + this.screenOnTime);
+        LogFileWriter.write("亮屏时间:" + this.screenOnTime + " ms");
         Log.d(TAG, "总运行时间:" + format.format(startDate) + "~" + format.format(endDate));
-        Log.d(TAG, "息屏时间占比:" + String.valueOf(this.screenOffRatio));
-        LogFileWriter.write("息屏时间占比:" + String.valueOf(this.screenOffRatio));
-        Log.d(TAG, "亮屏时间占比:" + String.valueOf(this.screenOnRatio));
-        LogFileWriter.write("亮屏时间占比:" + String.valueOf(this.screenOnRatio));
+        if ((this.screenOffTime + this.screenOnTime) != 0) {
+            Log.d(TAG, "息屏时间占比:" + String.valueOf(this.screenOffRatio));
+            LogFileWriter.write("息屏时间占比:" + String.valueOf(this.screenOffRatio));
+            Log.d(TAG, "亮屏时间占比:" + String.valueOf(this.screenOnRatio));
+            LogFileWriter.write("亮屏时间占比:" + String.valueOf(this.screenOnRatio));
+        }
 
 //        this.chargeRatio = this.chargeTime * 1.0 / (this.chargeTime + this.noChargeTime);
 //        Log.d(TAG + "Device", "充电时间占比:" + String.valueOf(this.chargeRatio));

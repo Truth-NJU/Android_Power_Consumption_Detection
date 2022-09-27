@@ -19,6 +19,7 @@ public class AlarmServiceController {
     }
 
     public void finish() {
+        alarmServiceHooker.sHookHelper.doUnHook();
         LogFileWriter.write("调用设置提醒服务的次数: " + alarmServiceHooker.getSetTime());
         Log.d(TAG, "AlarmServiceController: setTime: " + alarmServiceHooker.getSetTime());
     }

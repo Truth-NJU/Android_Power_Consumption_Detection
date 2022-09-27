@@ -19,6 +19,7 @@ public class NotificationServiceController {
     }
 
     public void finish() {
+        notificationServiceHooker.sHookHelper.doUnHook();
         Log.d(TAG, "NotificationServiceController: createChannelTime: " + notificationServiceHooker.getCreateChannelTime());
         LogFileWriter.write("创建通知的次数:" + notificationServiceHooker.getCreateChannelTime());
         Log.d(TAG, "NotificationServiceController: notifyTime: " + notificationServiceHooker.getNotifyTime());

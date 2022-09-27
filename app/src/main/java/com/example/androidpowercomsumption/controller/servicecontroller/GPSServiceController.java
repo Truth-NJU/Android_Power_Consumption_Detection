@@ -19,6 +19,7 @@ public class GPSServiceController {
     }
 
     public void finish() {
+        gpsServiceHooker.sHookHelper.doUnHook();
         Log.d(TAG, "GPSServiceController: GPS请求扫描的次数:" + gpsServiceHooker.getScanTime());
         LogFileWriter.write("GPS请求扫描的次数: " + gpsServiceHooker.getScanTime());
     }
