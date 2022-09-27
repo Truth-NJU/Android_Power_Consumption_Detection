@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption.utils;
+package com.example.androidpowercomsumption.utils.monitor;
 
 import android.util.Log;
 

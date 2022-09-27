@@ -2,9 +2,9 @@ package com.example.androidpowercomsumption.controller;
 
 import android.os.SystemClock;
 import android.util.Log;
-import com.example.androidpowercomsumption.utils.LogFileWriter;
-import com.example.androidpowercomsumption.utils.ProcState;
-import com.example.androidpowercomsumption.utils.ProcStateUtil;
+import com.example.androidpowercomsumption.utils.monitor.LogFileWriter;
+import com.example.androidpowercomsumption.utils.state.ProcState;
+import com.example.androidpowercomsumption.utils.state.ProcStateUtil;
 import com.example.androidpowercomsumption.diff.ThreadConsumptionDiff;
 
 import java.text.SimpleDateFormat;

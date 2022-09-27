@@ -2,7 +2,7 @@ package com.example.androidpowercomsumption.controller.servicecontroller;
 
 
 import android.util.Log;
-import com.example.androidpowercomsumption.utils.LogFileWriter;
+import com.example.androidpowercomsumption.utils.monitor.LogFileWriter;
 import com.example.androidpowercomsumption.utils.systemservice.hooker.WifiServiceHooker;
 
 public class WifiServiceController {

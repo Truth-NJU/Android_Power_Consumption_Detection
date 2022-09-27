@@ -1,4 +1,4 @@
-package com.example.androidpowercomsumption.utils;
+package com.example.androidpowercomsumption.utils.state;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -101,7 +101,7 @@ public class DeviceStateListener {
     }
 
 
-    interface ScreenStateListener {
+    public interface ScreenStateListener {
         /**
          * 此时屏幕已经点亮，但可能是在锁屏状态
          * 比如用户之前锁定了屏幕，按了电源键启动屏幕，则回调此方法

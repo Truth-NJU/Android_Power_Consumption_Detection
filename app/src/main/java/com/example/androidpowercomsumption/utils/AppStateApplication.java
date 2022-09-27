@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.example.androidpowercomsumption.controller.*;
+import com.example.androidpowercomsumption.utils.monitor.TimeMonitor;
+import com.example.androidpowercomsumption.utils.state.DeviceStateListener;
 import com.example.androidpowercomsumption.utils.systemservice.SimulateSystemService;
 
 

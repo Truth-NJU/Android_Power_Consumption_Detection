@@ -1,6 +1,6 @@
 package com.example.androidpowercomsumption.diff;
 
-import com.example.androidpowercomsumption.utils.ProcState;
+import com.example.androidpowercomsumption.utils.state.ProcState;
 
 import java.util.ArrayList;
 import java.util.List;
