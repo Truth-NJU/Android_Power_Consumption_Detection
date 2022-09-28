@@ -29,13 +29,13 @@ public class TimeMonitor {
 
     private final WifiServiceController wifiServiceController = new WifiServiceController(new WifiServiceHooker());
 
-    private final GPSServiceController gpsServiceController=new GPSServiceController(new GPSServiceHooker());
+    private final GPSServiceController gpsServiceController = new GPSServiceController(new GPSServiceHooker());
 
-    private final BluetoothServiceController bluetoothServiceController=new BluetoothServiceController(new BluetoothServiceHooker());
+    private final BluetoothServiceController bluetoothServiceController = new BluetoothServiceController(new BluetoothServiceHooker());
 
-    private final AlarmServiceController alarmServiceController=new AlarmServiceController(new AlarmServiceHooker());
+    private final AlarmServiceController alarmServiceController = new AlarmServiceController(new AlarmServiceHooker());
 
-    private final NotificationServiceController notificationServiceController=new NotificationServiceController(new NotificationServiceHooker());
+    private final NotificationServiceController notificationServiceController = new NotificationServiceController(new NotificationServiceHooker());
 
     private boolean isFirst = true; // 第一次启动并且进入前台
 
