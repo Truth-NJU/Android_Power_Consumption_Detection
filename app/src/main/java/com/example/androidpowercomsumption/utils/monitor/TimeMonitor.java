@@ -135,7 +135,7 @@ public class TimeMonitor {
             // todo 输出报告
             Log.d("ServiceController", "App后台运行时间段内调用系统服务次数");
             LogFileWriter.write("=================================================================");
-            LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于后运行)");
+            LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于后台运行)");
             stopServiceHooker();
             stopThreadMonitor();
             // 开始前台时间段的监控

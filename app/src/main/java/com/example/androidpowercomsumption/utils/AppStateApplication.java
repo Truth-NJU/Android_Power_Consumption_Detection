@@ -116,7 +116,7 @@ public class AppStateApplication extends Application {
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController, Context context) {
 //            this.deviceStateController = deviceStateController;
             this.context = context;
-            this.timeMonitor=new TimeMonitor(deviceStateController);
+            this.timeMonitor = new TimeMonitor(deviceStateController);
         }
 
         /**
@@ -151,11 +151,14 @@ public class AppStateApplication extends Application {
             SimulateSystemService.bluetooth(context);
             SimulateSystemService.alarm(context);
             SimulateSystemService.notify(context);
+
+            if (activity.isFinishing()) {
+                timeMonitor.stopMonitor();
+            }
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
-
         }
 
         @Override
@@ -163,13 +166,8 @@ public class AppStateApplication extends Application {
         }
 
         @Override
-        public void onActivityPreDestroyed(Activity activity) {
-            timeMonitor.stopMonitor();
-        }
-
-        @Override
         public void onActivityDestroyed(@NonNull Activity activity) {
-
+            // timeMonitor.stopMonitor();
         }
     }
 

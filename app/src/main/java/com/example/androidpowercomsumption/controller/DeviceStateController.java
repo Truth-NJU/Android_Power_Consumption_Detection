@@ -61,6 +61,7 @@ public class DeviceStateController {
 
 //        this.chargeRatio = this.chargeTime * 1.0 / (this.chargeTime + this.noChargeTime);
 //        Log.d(TAG + "Device", "充电时间占比:" + String.valueOf(this.chargeRatio));
+         LogFileWriter.write("充电时间:" + this.chargeTime);
 
 
     }
