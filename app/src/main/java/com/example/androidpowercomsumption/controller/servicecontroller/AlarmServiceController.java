@@ -9,6 +9,8 @@ public class AlarmServiceController {
 
     private AlarmServiceHooker alarmServiceHooker;
 
+    private int preSetTime = 0;
+
     public AlarmServiceController(AlarmServiceHooker alarmServiceHooker) {
         this.alarmServiceHooker = alarmServiceHooker;
     }
@@ -20,7 +22,8 @@ public class AlarmServiceController {
 
     public void finish() {
         alarmServiceHooker.sHookHelper.doUnHook();
-        LogFileWriter.write("调用设置提醒服务的次数: " + alarmServiceHooker.getSetTime());
-        Log.d(TAG, "AlarmServiceController: setTime: " + alarmServiceHooker.getSetTime());
+        LogFileWriter.write("调用设置提醒服务的次数: " + (alarmServiceHooker.setTime - preSetTime));
+        Log.d(TAG, "AlarmServiceController: setTime: " + (alarmServiceHooker.setTime - preSetTime));
+        this.preSetTime = alarmServiceHooker.setTime;
     }
 }

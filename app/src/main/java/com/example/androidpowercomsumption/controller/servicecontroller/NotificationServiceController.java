@@ -9,6 +9,10 @@ public class NotificationServiceController {
 
     private NotificationServiceHooker notificationServiceHooker;
 
+    private int preCreateChannelTime = 0;
+
+    private int preNotifyTime = 0;
+
     public NotificationServiceController(NotificationServiceHooker notificationServiceHooker) {
         this.notificationServiceHooker = notificationServiceHooker;
     }
@@ -20,9 +24,11 @@ public class NotificationServiceController {
 
     public void finish() {
         notificationServiceHooker.sHookHelper.doUnHook();
-        Log.d(TAG, "NotificationServiceController: createChannelTime: " + notificationServiceHooker.getCreateChannelTime());
-        LogFileWriter.write("创建通知的次数:" + notificationServiceHooker.getCreateChannelTime());
-        Log.d(TAG, "NotificationServiceController: notifyTime: " + notificationServiceHooker.getNotifyTime());
-        LogFileWriter.write("通知的次数:" + notificationServiceHooker.getNotifyTime());
+        Log.d(TAG, "NotificationServiceController: createChannelTime: " + (notificationServiceHooker.createChannelTime - preCreateChannelTime));
+        LogFileWriter.write("创建通知的次数:" + (notificationServiceHooker.createChannelTime - preCreateChannelTime));
+        Log.d(TAG, "NotificationServiceController: notifyTime: " + (notificationServiceHooker.notifyTime - preNotifyTime));
+        LogFileWriter.write("通知的次数:" + (notificationServiceHooker.notifyTime - preNotifyTime));
+        this.preCreateChannelTime = notificationServiceHooker.createChannelTime;
+        this.preNotifyTime = notificationServiceHooker.notifyTime;
     }
 }

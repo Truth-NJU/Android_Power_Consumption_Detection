@@ -9,15 +9,8 @@ import java.lang.reflect.Method;
 public class AlarmServiceHooker {
     private static final String TAG = "ServiceController";
 
-    private int setTime;
+    public int setTime = 0;
 
-    public int getSetTime() {
-        return setTime;
-    }
-
-    public void setSetTime(int setTime) {
-        this.setTime = setTime;
-    }
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override

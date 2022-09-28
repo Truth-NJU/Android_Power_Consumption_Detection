@@ -22,11 +22,12 @@ import androidx.annotation.Nullable;
 
 import java.lang.reflect.Method;
 
-public final class GPSServiceHooker {
+public class GPSServiceHooker {
 
     private static final String TAG = "ServiceController";
 
-    private int scanTime = 0;
+    public int scanTime = 0;
+
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
         public void serviceMethodInvoke(Method method, Object[] args) {
@@ -51,12 +52,4 @@ public final class GPSServiceHooker {
 
     public SystemServiceHooker sHookHelper = new SystemServiceHooker(Context.LOCATION_SERVICE, "android.location.ILocationManager", sHookCallback);
 
-
-    public int getScanTime() {
-        return scanTime;
-    }
-
-    public void setScanTime(int scanTime) {
-        this.scanTime = scanTime;
-    }
 }

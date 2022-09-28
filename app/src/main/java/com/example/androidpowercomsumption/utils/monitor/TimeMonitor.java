@@ -21,21 +21,21 @@ public class TimeMonitor {
 
     private long stopMonitorTime;
 
-    private AppStateController appStateController = new AppStateController();
+    private final AppStateController appStateController = new AppStateController();
 
     private ThreadController threadController = new ThreadController();
 
-    private DeviceStateController deviceStateController;
+    private final DeviceStateController deviceStateController;
 
-    private WifiServiceController wifiServiceController;
+    private final WifiServiceController wifiServiceController = new WifiServiceController(new WifiServiceHooker());
 
-    private GPSServiceController gpsServiceController;
+    private final GPSServiceController gpsServiceController=new GPSServiceController(new GPSServiceHooker());
 
-    private BluetoothServiceController bluetoothServiceController;
+    private final BluetoothServiceController bluetoothServiceController=new BluetoothServiceController(new BluetoothServiceHooker());
 
-    private AlarmServiceController alarmServiceController;
+    private final AlarmServiceController alarmServiceController=new AlarmServiceController(new AlarmServiceHooker());
 
-    private NotificationServiceController notificationServiceController;
+    private final NotificationServiceController notificationServiceController=new NotificationServiceController(new NotificationServiceHooker());
 
     private boolean isFirst = true; // 第一次启动并且进入前台
 
@@ -80,7 +80,7 @@ public class TimeMonitor {
             file = new File(filePath);
             if (!file.exists()) {
                 file.createNewFile();
-            }else{
+            } else {
                 file.delete();
                 file.createNewFile();
             }
@@ -133,7 +133,7 @@ public class TimeMonitor {
         } else {
             // 结束后台时间段的监控，做一次输出
             // todo 输出报告
-            Log.d("ServiceController", "App后运行时间段内调用系统服务次数");
+            Log.d("ServiceController", "App后台运行时间段内调用系统服务次数");
             LogFileWriter.write("=================================================================");
             LogFileWriter.write(getCurrentFormatTime(lastLogTime) + "~" + getCurrentFormatTime(getCurrentTime()) + ":(APP处于后运行)");
             stopServiceHooker();
@@ -166,12 +166,6 @@ public class TimeMonitor {
 
 
     public void startServiceHooker() {
-        wifiServiceController = new WifiServiceController(new WifiServiceHooker());
-        gpsServiceController = new GPSServiceController(new GPSServiceHooker());
-        bluetoothServiceController = new BluetoothServiceController(new BluetoothServiceHooker());
-        alarmServiceController = new AlarmServiceController(new AlarmServiceHooker());
-        notificationServiceController = new NotificationServiceController(new NotificationServiceHooker());
-
         wifiServiceController.start();
         gpsServiceController.start();
         bluetoothServiceController.start();

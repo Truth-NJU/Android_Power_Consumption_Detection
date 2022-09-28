@@ -17,35 +17,11 @@ import java.lang.reflect.Proxy;
 public class BluetoothServiceHooker {
     private static final String TAG = "ServiceController";
 
-    private int registerTime = 0;
+    public int registerTime = 0;
 
-    private int discoveryTime = 0;
+    public int discoveryTime = 0;
 
-    private int scanTime = 0;
-
-    public int getRegisterTime() {
-        return registerTime;
-    }
-
-    public void setRegisterTime(int registerTime) {
-        this.registerTime = registerTime;
-    }
-
-    public int getDiscoveryTime() {
-        return discoveryTime;
-    }
-
-    public void setDiscoveryTime(int discoveryTime) {
-        this.discoveryTime = discoveryTime;
-    }
-
-    public int getScanTime() {
-        return scanTime;
-    }
-
-    public void setScanTime(int scanTime) {
-        this.scanTime = scanTime;
-    }
+    public int scanTime = 0;
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override

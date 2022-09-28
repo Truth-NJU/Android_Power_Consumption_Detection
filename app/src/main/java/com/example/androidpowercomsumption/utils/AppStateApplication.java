@@ -110,24 +110,8 @@ public class AppStateApplication extends Application {
     static class MyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks {
         private Context context;
 
-//        private final AppStateController appStateController = new AppStateController();
-//
-//        private ThreadController threadController = new ThreadController();
-
-//        private final DeviceStateController deviceStateController;
-
         private final TimeMonitor timeMonitor;
 
-//        private final WifiServiceController wifiServiceController = new WifiServiceController(new WifiServiceHooker());
-//
-//        private final GPSServiceController gpsServiceController = new GPSServiceController(new GPSServiceHooker());
-//
-//        private final BluetoothServiceController bluetoothServiceController = new BluetoothServiceController(new BluetoothServiceHooker());
-//
-//        private final AlarmServiceController alarmServiceController = new AlarmServiceController(new AlarmServiceHooker());
-//
-//        private final NotificationServiceController notificationServiceController = new NotificationServiceController(new NotificationServiceHooker());
-//
 
         public MyActivityLifecycleCallbacks(DeviceStateController deviceStateController, Context context) {
 //            this.deviceStateController = deviceStateController;
@@ -161,6 +145,12 @@ public class AppStateApplication extends Application {
         @Override
         public void onActivityPaused(Activity activity) {
             timeMonitor.toBackend();
+            // todo
+            SimulateSystemService.wifi(context);
+            SimulateSystemService.gps(context);
+            SimulateSystemService.bluetooth(context);
+            SimulateSystemService.alarm(context);
+            SimulateSystemService.notify(context);
         }
 
         @Override

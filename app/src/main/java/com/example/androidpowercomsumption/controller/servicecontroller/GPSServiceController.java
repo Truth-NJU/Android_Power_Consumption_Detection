@@ -10,6 +10,8 @@ public class GPSServiceController {
 
     private GPSServiceHooker gpsServiceHooker;
 
+    private int preScanTime = 0;
+
     public GPSServiceController(GPSServiceHooker gpsServiceHooker) {
         this.gpsServiceHooker = gpsServiceHooker;
     }
@@ -20,7 +22,8 @@ public class GPSServiceController {
 
     public void finish() {
         gpsServiceHooker.sHookHelper.doUnHook();
-        Log.d(TAG, "GPSServiceController: GPS请求扫描的次数:" + gpsServiceHooker.getScanTime());
-        LogFileWriter.write("GPS请求扫描的次数: " + gpsServiceHooker.getScanTime());
+        Log.d(TAG, "GPSServiceController: GPS请求扫描的次数:" + (gpsServiceHooker.scanTime - preScanTime));
+        LogFileWriter.write("GPS请求扫描的次数: " + (gpsServiceHooker.scanTime - preScanTime));
+        this.preScanTime = gpsServiceHooker.scanTime;
     }
 }

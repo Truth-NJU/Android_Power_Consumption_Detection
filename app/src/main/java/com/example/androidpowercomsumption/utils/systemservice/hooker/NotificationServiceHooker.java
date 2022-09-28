@@ -9,25 +9,9 @@ import java.lang.reflect.Method;
 public class NotificationServiceHooker {
     private static final String TAG = "ServiceController";
 
-    private int createChannelTime;
+    public int createChannelTime = 0;
 
-    private int notifyTime;
-
-    public int getCreateChannelTime() {
-        return createChannelTime;
-    }
-
-    public void setCreateChannelTime(int createChannelTime) {
-        this.createChannelTime = createChannelTime;
-    }
-
-    public int getNotifyTime() {
-        return notifyTime;
-    }
-
-    public void setNotifyTime(int notifyTime) {
-        this.notifyTime = notifyTime;
-    }
+    public int notifyTime = 0;
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
