@@ -14,7 +14,7 @@ public class AlarmServiceHooker {
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
-        public void serviceMethodInvoke(Method method, Object[] args) {
+        public void invoke(Method method, Object[] args) {
             if (method.getName().equals("set")
                     || method.getName().equals("setRepeating") || method.getName().equals("setInexactRepeating")) {
                 setTime++;
@@ -24,7 +24,7 @@ public class AlarmServiceHooker {
 
         @Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
+        public Object intercept(Object receiver, Method method, Object[] args) throws Throwable {
             return null;
         }
     };

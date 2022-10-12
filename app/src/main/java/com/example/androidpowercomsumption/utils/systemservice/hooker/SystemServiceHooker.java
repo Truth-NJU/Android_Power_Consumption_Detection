@@ -104,18 +104,15 @@ public class SystemServiceHooker {
 
                 return Proxy.newProxyInstance(classLoader,
                         new Class[]{IBinder.class, IInterface.class, serviceManagerCls},
-                        new InvocationHandler() {
-                            @Override
-                            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                if (callback != null) {
-                                    callback.serviceMethodInvoke(method, args);
-                                    Object result = callback.serviceMethodIntercept(originManagerService, method, args);
-                                    if (result != null) {
-                                        return result;
-                                    }
+                        (proxy1, method1, args1) -> {
+                            if (callback != null) {
+                                callback.invoke(method1, args1);
+                                Object result = callback.intercept(originManagerService, method1, args1);
+                                if (result != null) {
+                                    return result;
                                 }
-                                return method.invoke(originManagerService, args);
                             }
+                            return method1.invoke(originManagerService, args1);
                         }
                 );
             }

@@ -15,7 +15,7 @@ public class NotificationServiceHooker {
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
-        public void serviceMethodInvoke(Method method, Object[] args) {
+        public void invoke(Method method, Object[] args) {
             if ("createNotificationChannels".equals(method.getName())) {
                 createChannelTime++;
                 Log.d(TAG, "NotificationServiceHooker: createChannelTime++");
@@ -27,7 +27,7 @@ public class NotificationServiceHooker {
 
         @Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
+        public Object intercept(Object receiver, Method method, Object[] args) throws Throwable {
             return null;
         }
     };

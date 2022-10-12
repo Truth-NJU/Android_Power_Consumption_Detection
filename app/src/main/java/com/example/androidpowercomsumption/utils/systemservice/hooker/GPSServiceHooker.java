@@ -30,7 +30,7 @@ public class GPSServiceHooker {
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
-        public void serviceMethodInvoke(Method method, Object[] args) {
+        public void invoke(Method method, Object[] args) {
             if ("requestLocationUpdates".equals(method.getName())) {
                 if (args != null) {
                     for (Object item : args) {
@@ -45,7 +45,7 @@ public class GPSServiceHooker {
 
         @Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) {
+        public Object intercept(Object receiver, Method method, Object[] args) {
             return null;
         }
     };

@@ -22,7 +22,7 @@ public class WifiServiceHooker {
         getScanResultTime = 0;
         sHookCallback = new ServiceHookCallback() {
             @Override
-            public void serviceMethodInvoke(Method method, Object[] args) {
+            public void invoke(Method method, Object[] args) {
                 if ("startScan".equals(method.getName())) {
                     scanTime++;
                     Log.d(TAG, "WifiServiceHooker: scan++ ");
@@ -34,7 +34,7 @@ public class WifiServiceHooker {
 
             @Nullable
             @Override
-            public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
+            public Object intercept(Object receiver, Method method, Object[] args) throws Throwable {
                 return null;
             }
         };

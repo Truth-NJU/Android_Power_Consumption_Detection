@@ -1,16 +1,11 @@
 package com.example.androidpowercomsumption.utils.systemservice.hooker;
 
-import android.annotation.SuppressLint;
-import android.bluetooth.le.ScanSettings;
-import android.content.Context;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -25,12 +20,12 @@ public class BluetoothServiceHooker {
 
     private ServiceHookCallback sHookCallback = new ServiceHookCallback() {
         @Override
-        public void serviceMethodInvoke(Method method, Object[] args) {
+        public void invoke(Method method, Object[] args) {
         }
 
         @Nullable
         @Override
-        public Object serviceMethodIntercept(Object receiver, Method method, Object[] args) throws Throwable {
+        public Object intercept(Object receiver, Method method, Object[] args) throws Throwable {
             if ("registerAdapter".equals(method.getName())) {
                 Object blueTooth = method.invoke(receiver, args);
                 Object proxy = proxyBluetooth(blueTooth);
@@ -48,19 +43,16 @@ public class BluetoothServiceHooker {
 
     private Object proxyBluetooth(final Object delegate) {
         try {
-            @SuppressLint("PrivateApi") final Class<?> clazz = Class.forName("android.bluetooth.IBluetooth");
-            final Class<?>[] interfaces = new Class<?>[]{IBinder.class, IInterface.class, clazz};
-            final ClassLoader loader = delegate.getClass().getClassLoader();
-            final InvocationHandler handler = new InvocationHandler() {
-                @Override
-                public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-                    if ("startDiscovery".equals(method.getName())) {
-                        discoveryTime++;
-                        Log.d(TAG, "BluetoothServiceHooker: discoveryTime++");
-                    }
-
-                    return method.invoke(delegate, args);
+            Class<?> clazz = Class.forName("android.bluetooth.IBluetooth");
+            Class<?>[] interfaces = new Class<?>[]{IBinder.class, IInterface.class, clazz};
+            ClassLoader loader = delegate.getClass().getClassLoader();
+            InvocationHandler handler = (proxy, method, args) -> {
+                if ("startDiscovery".equals(method.getName())) {
+                    discoveryTime++;
+                    Log.d(TAG, "BluetoothServiceHooker: discoveryTime++");
                 }
+
+                return method.invoke(delegate, args);
             };
             return Proxy.newProxyInstance(loader, interfaces, handler);
         } catch (Throwable e) {
@@ -71,21 +63,18 @@ public class BluetoothServiceHooker {
 
     private Object proxyBluetoothGatt(final Object delegate) {
         try {
-            @SuppressLint("PrivateApi") final Class<?> clazz = Class.forName("android.bluetooth.IBluetoothGatt");
-            final Class<?>[] interfaces = new Class<?>[]{IBinder.class, IInterface.class, clazz};
-            final ClassLoader loader = delegate.getClass().getClassLoader();
-            final InvocationHandler handler = new InvocationHandler() {
-                @Override
-                public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-                    if ("registerScanner".equals(method.getName())) {
-                        registerTime++;
-                        Log.d(TAG, "BluetoothServiceHooker: registerTime++");
-                    } else if ("startScan".equals(method.getName()) || "startScanForIntent".equals(method.getName())) {
-                        scanTime++;
-                        Log.d(TAG, "BluetoothServiceHooker: scanTime++");
-                    }
-                    return method.invoke(delegate, args);
+            Class<?> clazz = Class.forName("android.bluetooth.IBluetoothGatt");
+            Class<?>[] interfaces = new Class<?>[]{IBinder.class, IInterface.class, clazz};
+            ClassLoader loader = delegate.getClass().getClassLoader();
+            InvocationHandler handler = (proxy, method, args) -> {
+                if ("registerScanner".equals(method.getName())) {
+                    registerTime++;
+                    Log.d(TAG, "BluetoothServiceHooker: registerTime++");
+                } else if ("startScan".equals(method.getName()) || "startScanForIntent".equals(method.getName())) {
+                    scanTime++;
+                    Log.d(TAG, "BluetoothServiceHooker: scanTime++");
                 }
+                return method.invoke(delegate, args);
             };
             return Proxy.newProxyInstance(loader, interfaces, handler);
         } catch (Throwable e) {
