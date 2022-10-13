@@ -7,7 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleObserver;
 
-public class MainActivity extends AppCompatActivity implements LifecycleObserver {
+public class MainActivity extends AppCompatActivity implements LifecycleObserver{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
