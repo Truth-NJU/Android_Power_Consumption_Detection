@@ -1,6 +1,8 @@
 # Android_Power_Consumption_Detection
 安卓耗电检测
 
+[![Security Status](https://www.murphysec.com/platform3/v3/badge/1609091406091001857.svg)](https://www.murphysec.com/accept?code=27376392005d6e62c4144b8f1a7d40f6&type=1&from=2&t=1)
+
 ## 1. 背景
 
 每一个稍微有点规模的 App，总会自带一些线下的测试功能代码，比如环境切换功能、帧率查看功能等等，这些功能的往往放在各式各样的入口中，每个App开发者都需要自己实现，会降低开发效率。DoKit 是一款面向移动端的研发测试效率平台，能够让每一个 App 快速接入一些常用的或者没有实现的一些辅助开发工具、测试效率工具、视觉辅助工具，可以帮助App开发者进行测试。
